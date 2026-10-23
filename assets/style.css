@@ -238,6 +238,43 @@ main { padding: 22px; max-width: 1560px; margin: 0 auto; }
   padding: 1px 9px;
 }
 
+/* ---------------- 只读 / 编辑模式 ---------------- */
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+}
+
+.mode-badge.on {
+  color: #0a7d4d;
+  background: rgba(16, 113, 74, .1);
+  border-color: rgba(16, 113, 74, .45);
+}
+
+body.readonly .edit-only { display: none !important; }
+
+.hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
 .layout.two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); margin-bottom: 16px; }
 

@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0f1219" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>我的教务系统 · 课表管理</title>
-<link rel="stylesheet" href="assets/style.css?v=4">
+<link rel="stylesheet" href="assets/style.css?v=5">
 </head>
 <body data-theme="light">
 
@@ -28,6 +28,7 @@
   </nav>
 
   <div class="top-actions">
+    <span class="mode-badge" id="modeBadge" title="只读模式：在控制台执行 jwxt.unlock() 可编辑">只读</span>
     <select id="termSelect" class="select term-select" title="切换年级 / 学期"></select>
     <button class="icon-btn" id="btnTheme" title="切换深浅色">🌙</button>
     <button class="icon-btn" id="btnPrint" title="打印当前周课表">🖨</button>
@@ -56,7 +57,7 @@
 
       <select id="weekSelect" class="select" title="跳转到指定周"></select>
       <button class="btn ghost" id="btnThisWeek">回到本周</button>
-      <button class="btn primary" id="btnAddCourse">+ 新增课程</button>
+      <button class="btn primary edit-only" id="btnAddCourse">+ 新增课程</button>
     </div>
 
     <div class="layout">
@@ -79,8 +80,8 @@
           <p><strong id="emptyTitle">本周没有课程</strong></p>
           <p class="muted" id="emptyNote">可在「课程管理」里新增课程。</p>
           <div class="empty-actions" id="emptyActions">
-            <button class="btn primary" id="btnEmptyAdd">+ 添加课程</button>
-            <button class="btn ghost" id="btnEmptyCopy" hidden>从其他周复制</button>
+            <button class="btn primary edit-only" id="btnEmptyAdd">+ 添加课程</button>
+            <button class="btn ghost edit-only" id="btnEmptyCopy" hidden>从其他周复制</button>
           </div>
         </div>
       </div>
@@ -112,8 +113,8 @@
         <p class="muted">课表按周存快照：这里的增删改<strong>只影响当前这一周</strong>，不会套用到其他周。用顶部周次切换器或下面的复制按钮处理其他周。</p>
       </div>
       <div class="section-actions">
-        <button class="btn primary" id="btnAddCourse2">+ 新增课程</button>
-        <button class="btn ghost" id="btnResetSeed">恢复默认课表</button>
+        <button class="btn primary edit-only" id="btnAddCourse2">+ 新增课程</button>
+        <button class="btn ghost edit-only" id="btnResetSeed">恢复默认课表</button>
       </div>
     </div>
 
@@ -121,9 +122,9 @@
       <div class="toolbar">
         <span class="toolbar-label">复制本周课表到</span>
         <select id="copyTargetWeek" class="select"></select>
-        <button class="btn" id="btnCopyWeek">复制</button>
+        <button class="btn edit-only" id="btnCopyWeek">复制</button>
         <span class="toolbar-sep"></span>
-        <button class="btn ghost danger" id="btnClearWeek">清空本周</button>
+        <button class="btn ghost danger edit-only" id="btnClearWeek">清空本周</button>
         <span class="toolbar-hint" id="weekDataHint"></span>
       </div>
       <div class="table-scroll">
@@ -222,7 +223,8 @@
         <p class="hint" id="termHint">—</p>
         <p class="hint" id="dataHint">—</p>
         <p class="hint">校历：2026-09-01（周二）开学 → 第 1 周 08-31~09-06；第 5 周国庆无课；抓取快照时是第 8 周（10-19~10-25）。</p>
-        <div class="form-actions">
+        <p class="hint" id="readonlyHint" hidden>当前是只读模式：课表内容可查看、可导出，但不能修改。需要编辑时按 F12 打开控制台，执行 <code>jwxt.unlock()</code>。</p>
+        <div class="form-actions edit-only">
           <button class="btn primary" id="btnSaveSettings">保存设置</button>
         </div>
       </div>
@@ -232,9 +234,9 @@
         <p class="hint">换浏览器、清缓存前先导出，导入即可完整恢复。</p>
         <div class="form-actions">
           <button class="btn" id="btnExport">导出 JSON</button>
-          <button class="btn" id="btnImport">导入 JSON</button>
-          <button class="btn" id="btnResyncSeed">重新同步内置数据</button>
-          <button class="btn ghost danger" id="btnWipe">清空本学期</button>
+          <button class="btn edit-only" id="btnImport">导入 JSON</button>
+          <button class="btn edit-only" id="btnResyncSeed">重新同步内置数据</button>
+          <button class="btn ghost danger edit-only" id="btnWipe">清空本学期</button>
         </div>
         <input type="file" id="fileImport" accept=".json,application/json" hidden>
         <hr class="sep">
@@ -258,8 +260,8 @@
   </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot">
-    <button class="btn danger ghost" id="drawerDelete">删除</button>
-    <button class="btn primary" id="drawerEdit">编辑</button>
+    <button class="btn danger ghost edit-only" id="drawerDelete">删除</button>
+    <button class="btn primary edit-only" id="drawerEdit">编辑</button>
   </div>
 </aside>
 
@@ -331,6 +333,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/app.js?v=4"></script>
+<script src="assets/app.js?v=5"></script>
 </body>
 </html>

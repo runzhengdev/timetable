@@ -402,6 +402,70 @@
   };
   let storageOK = true;
 
+  /* ==================== 只读 / 编辑模式 ====================
+     默认只读：所有改动入口先过 requireEdit()。
+     控制台执行 jwxt.unlock() 后才可编辑，刷新页面自动失效。 */
+  let editUnlocked = false;
+
+  function requireEdit() {
+    if (editUnlocked) return true;
+    toast('只读模式：按 F12 打开控制台，执行 jwxt.unlock() 后可编辑', 'err');
+    return false;
+  }
+
+  function applyEditMode() {
+    document.body.classList.toggle('readonly', !editUnlocked);
+    const badge = $('#modeBadge');
+    if (badge) {
+      badge.textContent = editUnlocked ? '编辑模式' : '只读';
+      badge.classList.toggle('on', editUnlocked);
+      badge.title = editUnlocked
+        ? '编辑模式已开启，刷新页面后自动失效'
+        : '只读模式：在控制台执行 jwxt.unlock() 可编辑';
+    }
+    const hint = $('#readonlyHint');
+    if (hint) hint.hidden = editUnlocked;
+  }
+
+  function resetLocalData() {
+    ['jwxt.schedule.v2', 'jwxt.schedule.v1', 'jwxt.terms.v1', 'jwxt.wipedTerms.v1',
+      'jwxt.settings.v1', 'jwxt.seedRev', 'jwxt.seedSynced', 'jwxt.prevSchedule',
+      'jwxt.courses.v1'].forEach(function (k) {
+      try { window.localStorage.removeItem(k); } catch (e) { /* 忽略 */ }
+    });
+    window.location.reload();
+  }
+
+  window.jwxt = {
+    unlock: function () {
+      editUnlocked = true;
+      applyEditMode();
+      console.log('%c✓ 编辑模式已开启（本次页面有效，刷新后失效）', 'color:#0a7d4d;font-weight:bold');
+      return '编辑模式已开启';
+    },
+    lock: function () {
+      editUnlocked = false;
+      applyEditMode();
+      return '已回到只读模式';
+    },
+    status: function () {
+      return editUnlocked ? 'editable' : 'readonly';
+    },
+    restore: function () {
+      if (!editUnlocked && !window.confirm('将清除本浏览器的课表缓存并恢复内置数据，继续？')) return '已取消';
+      resetLocalData();
+      return '正在恢复…';
+    },
+    help: function () {
+      console.log(
+        'jwxt.unlock()   开启编辑（刷新后失效）\n' +
+        'jwxt.lock()     回到只读\n' +
+        'jwxt.status()   查看当前模式\n' +
+        'jwxt.restore()  清除本地缓存并恢复内置课表'
+      );
+    }
+  };
+
   const NARROW_MQ = window.matchMedia ? window.matchMedia('(max-width: 720px)') : null;
   function isNarrow() {
     if (NARROW_MQ) return NARROW_MQ.matches;
@@ -1203,8 +1267,8 @@
           '<td class="num" data-label="学分">' + fmtNum(c.credits) + '</td>' +
           '<td data-label="属性"><span class="tag">' + esc(c.attr) + '</span></td>' +
           '<td class="ops">' +
-          '<button class="mini-btn" data-act="edit">编辑</button>' +
-          '<button class="mini-btn del" data-act="del">删除</button>' +
+          '<button class="mini-btn edit-only" data-act="edit">编辑</button>' +
+          '<button class="mini-btn del edit-only" data-act="del">删除</button>' +
           '</td></tr>';
       }).join('');
     }
@@ -1445,6 +1509,7 @@
   }
 
   function openModal(id) {
+    if (!requireEdit()) return;
     buildFormOptions();
     state.editingId = id || null;
     $('#formError').hidden = true;
@@ -1515,6 +1580,7 @@
 
   function submitForm(ev) {
     ev.preventDefault();
+    if (!requireEdit()) return;
     const res = readForm();
     if (res.error) {
       const box = $('#formError');
@@ -1580,6 +1646,7 @@
   /* ==================== 复制 / 清空 ==================== */
 
   function copyWeek(from, to) {
+    if (!requireEdit()) return false;
     const src = weekUnits(from);
     if (!src) { toast('第 ' + from + ' 周没有数据可复制', 'err'); return false; }
     if (from === to) return false;
@@ -1640,6 +1707,7 @@
   }
 
   function importJSON(file) {
+    if (!requireEdit()) return;
     const reader = new FileReader();
     reader.onload = function () {
       try {
@@ -1756,6 +1824,7 @@
     });
 
     $('#btnEmptyCopy').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const from = state.copyFromWeek;
       if (!from) return;
       if (!window.confirm('把第 ' + from + ' 周的课表复制到第 ' + state.week + ' 周？会覆盖这一周现有内容。')) return;
@@ -1776,6 +1845,7 @@
       if (state.drawerId) openModal(state.drawerId);
     });
     $('#drawerDelete').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const id = state.drawerId;
       if (!id) return;
       const list = weekUnits(state.week) || [];
@@ -1792,6 +1862,7 @@
     $('#manageBody').addEventListener('click', function (e) {
       const btn = e.target.closest('button[data-act]');
       if (!btn) return;
+      if (!requireEdit()) return;
       const id = btn.closest('tr').dataset.id;
       const list = weekUnits(state.week) || [];
       if (btn.dataset.act === 'edit') { openModal(id); return; }
@@ -1805,6 +1876,7 @@
     });
 
     $('#btnCopyWeek').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const to = Number($('#copyTargetWeek').value);
       if (!to) return;
       const src = state.week;
@@ -1817,6 +1889,7 @@
     });
 
     $('#btnClearWeek').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const w = state.week;
       if (!window.confirm('把第 ' + w + ' 周清空（标记为确认无课）？其他周不受影响。')) return;
       state.schedule[w] = [];
@@ -1826,6 +1899,7 @@
     });
 
     $('#btnResetSeed').addEventListener('click', function () {
+      if (!requireEdit()) return;
       if (!window.confirm('恢复为四周快照的默认数据？（第 3、4、6、7 周有课，第 5 周无课，其余周无数据）当前修改会被覆盖。')) return;
       state.schedule = seedSchedule();
       persistSchedule();
@@ -1846,6 +1920,7 @@
     });
 
     $('#btnSaveSettings').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const raw = $('#inputTermStart').value;
       const tw = Number($('#inputTotalWeeks').value);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) { toast('请选择开学日 / 第 1 周内的日期', 'err'); return; }
@@ -1873,11 +1948,15 @@
     });
 
     $('#btnExport').addEventListener('click', exportJSON);
-    $('#btnImport').addEventListener('click', function () { $('#fileImport').click(); });
+    $('#btnImport').addEventListener('click', function () {
+      if (!requireEdit()) return;
+      $('#fileImport').click();
+    });
 
     const btnResync = $('#btnResyncSeed');
     if (btnResync) {
       btnResync.addEventListener('click', function () {
+        if (!requireEdit()) return;
         const added = resyncSeed();
         if (!added.length) { toast('已经是最新，没有缺失的周', 'ok'); return; }
         renderAll();
@@ -1886,11 +1965,13 @@
       });
     }
     $('#fileImport').addEventListener('change', function (e) {
+      if (!requireEdit()) { e.target.value = ''; return; }
       const f = e.target.files && e.target.files[0];
       if (f) importJSON(f);
       e.target.value = '';
     });
     $('#btnWipe').addEventListener('click', function () {
+      if (!requireEdit()) return;
       const label = (state.terms[state.activeTerm] || {}).label || '';
       if (!window.confirm('清空「' + label + '」的全部周次？其他学期不受影响，建议先导出备份。')) return;
       state.schedule = {};
@@ -1962,6 +2043,7 @@
     buildFormOptions();
     bindEvents();
     renderAll();
+    applyEditMode();
 
     if (!storageOK) {
       toast('本机禁止本地存储，修改不会保存，请用「导出 JSON」备份', 'err');
