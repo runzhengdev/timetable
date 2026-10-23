@@ -34,12 +34,13 @@
   const PALETTE = [232, 205, 268, 340, 163, 24, 190, 300, 45, 118];
 
   /* 只有外观偏好留在本机；课表内容每次加载都以内置数据为准 */
-  const KEY_SETTINGS = 'jwxt.settings.v1';
+  const KEY_SETTINGS = 'jwxt.settings.v2';
 
   /* 早期版本写入本机、现在已不再沿用的键（加载时清理） */
   const STALE_KEYS = [
-    'jwxt.schedule.v2', 'jwxt.schedule.v1', 'jwxt.terms.v1', 'jwxt.wipedTerms.v1',
-    'jwxt.seedRev', 'jwxt.seedSynced', 'jwxt.prevSchedule', 'jwxt.courses.v1'
+    'jwxt.settings.v1', 'jwxt.schedule.v2', 'jwxt.schedule.v1', 'jwxt.terms.v1',
+    'jwxt.wipedTerms.v1', 'jwxt.seedRev', 'jwxt.seedSynced', 'jwxt.prevSchedule',
+    'jwxt.courses.v1'
   ];
 
   /* 任课教师（按课名映射，缺的留空显示“待补充”） */
@@ -71,7 +72,7 @@
   ];
   const ACTIVE_TERM = '2026S1';   // 本学期（2026 级大一上）
 
-  const DEFAULT_SETTINGS = { termStart: '2026-08-31', totalWeeks: 20, theme: 'light', viewMode: 'auto' };
+  const DEFAULT_SETTINGS = { termStart: '2026-08-31', totalWeeks: 20, theme: 'dark', viewMode: 'auto' };
 
   /* 已确认无课的周（有记录、但节课为 0） */
   const WEEK_NOTES = {
@@ -82,6 +83,30 @@
     10: '军训（10-24 ~ 11-06），本周周一至周五无课',
     19: '学期末，校历标注无课',
     20: '学期末，校历标注无课'
+  };
+
+  /* 专升本助学班（独立轨道）：每周日 8 节，与主课表互不影响 */
+  const ZSB = {
+    label: '专升本助学班',
+    className: '26 秋插本 1 班',
+    periods: [
+      { no: 1, time: '09:00-09:45' },
+      { no: 2, time: '09:50-10:35' },
+      { no: 3, time: '10:40-11:25' },
+      { no: 4, time: '11:30-12:00' },
+      { no: 5, time: '14:00-14:45' },
+      { no: 6, time: '14:50-15:35' },
+      { no: 7, time: '15:40-16:25' },
+      { no: 8, time: '16:30-17:00' }
+    ],
+    dates: [
+      '2026-10-18', '2026-11-15', '2026-11-22', '2026-11-29',
+      '2026-12-06', '2026-12-13', '2026-12-20', '2026-12-27'
+    ],
+    units: [
+      { name: '英语（助学班）', periods: [1, 2, 3, 4], kind: 'core', hue: 42 },
+      { name: '政治（助学班）', periods: [5, 6, 7, 8], kind: 'minor', hue: 212 }
+    ]
   };
 
   /* 逐周快照种子：来自 UI 目录各周抓取的课表；空数组 = 确认无课；没有的周 = 无数据 */
@@ -395,6 +420,7 @@
     settings: Object.assign({}, DEFAULT_SETTINGS),
     week: 1,
     view: 'schedule',
+    track: 'main',
     editingId: null,
     drawerId: null,
     copyFromWeek: null,
@@ -755,8 +781,11 @@
   }
 
   function applyTheme() {
-    document.body.setAttribute('data-theme', state.settings.theme);
-    $('#btnTheme').textContent = state.settings.theme === 'dark' ? '☀️' : '🌙';
+    const dark = state.settings.theme === 'dark';
+    document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
+    $('#btnTheme').textContent = dark ? '☀️' : '🌙';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#0f1219' : '#f4f6fb');
   }
 
   /* ==================== 渲染：周次条 ==================== */
@@ -779,13 +808,6 @@
       html += '<option value="' + w + '">第 ' + w + ' 周' + flag + '</option>';
     }
     $('#weekSelect').innerHTML = html;
-
-    let copyOpts = '';
-    for (let w = 1; w <= total; w++) {
-      if (w === state.week) continue;
-      copyOpts += '<option value="' + w + '">第 ' + w + ' 周</option>';
-    }
-    $('#copyTargetWeek').innerHTML = copyOpts;
   }
 
   function renderWeekBar() {
@@ -797,7 +819,6 @@
     const evTag = weekEv.length ? ' · ' + weekEv.map(function (e) { return e.label; }).join('、') : '';
     $('#weekRange').textContent = mdLabel(mon) + ' ~ ' + mdLabel(sun) + evTag + ' · 共 ' + state.settings.totalWeeks + ' 周';
     $('#weekSelect').value = String(w);
-    $('#manageWeekLabel').textContent = '第 ' + w + ' 周';
 
     const cw = weekOfDate(new Date());
     const isNow = w === cw;
@@ -896,12 +917,12 @@
     if (isEmpty) {
       const hasData = !!units;
       const evs = eventsInWeek(week);
+      $('#emptyActions').hidden = evs.length > 0;
       if (evs.length) {
         $('#emptyTitle').textContent = '第 ' + week + ' 周：' + evs[0].label;
         $('#emptyNote').textContent = evs.map(function (e) {
           return mdLabel(parseISO(e.from)) + ' ~ ' + mdLabel(parseISO(e.to)) + ' ' + e.label;
         }).join('；') + '，期间不排课。';
-        $('#emptyActions').hidden = true;
       } else if (!hasData) {
         $('#emptyTitle').textContent = '第 ' + week + ' 周还没有课表数据';
         $('#emptyNote').textContent = '课表每周都可能变，所以不会自动沿用其他周。可以手动添加，或从最近有数据的一周复制一份再改。';
@@ -917,6 +938,60 @@
       if (canCopy) btnCopy.textContent = '从第 ' + prev + ' 周复制';
       $('#btnEmptyAdd').textContent = hasData ? '+ 添加课程' : '+ 手动添加课程';
     }
+  }
+
+  /* ==================== 渲染：助学班（日期列） ==================== */
+
+  function zsbTimeRange(u) {
+    const first = ZSB.periods[u.periods[0] - 1];
+    const last = ZSB.periods[u.periods[u.periods.length - 1] - 1];
+    return first.time.split('-')[0] + '-' + last.time.split('-')[1];
+  }
+
+  function renderZsb() {
+    const wd = '日一二三四五六';
+    let head = '<tr><th class="block-cell">节次</th>';
+    ZSB.dates.forEach(function (iso) {
+      const d = parseISO(iso);
+      head += '<th>' + mdLabel(d) + '<span class="th-date">周' + wd.charAt(d.getDay()) + '</span></th>';
+    });
+    head += '</tr>';
+    $('#zsbHead').innerHTML = head;
+
+    let body = '';
+    ZSB.periods.forEach(function (p) {
+      const start = ZSB.units.filter(function (u) { return u.periods[0] === p.no; })[0];
+      body += '<tr>';
+      body += '<th class="block-cell"><span class="blk-no">第 ' + p.no + ' 节</span>' +
+        '<span class="blk-time">' + p.time + '</span></th>';
+      if (start) {
+        const range = zsbTimeRange(start);
+        ZSB.dates.forEach(function (iso) {
+          body += '<td class="slot" rowspan="' + start.periods.length + '">' +
+            '<div class="chip zsb-chip" data-kind="' + start.kind + '" style="--h:' + start.hue + '" title="' +
+              esc(start.name + ' · ' + iso + ' · ' + range) + '">' +
+              '<div class="chip-name">' + esc(start.name) + '</div>' +
+              '<div class="chip-time">' + range + ' · ' + start.periods.length + ' 节</div>' +
+            '</div></td>';
+        });
+      }
+      body += '</tr>';
+    });
+    $('#zsbBody').innerHTML = body;
+  }
+
+  function switchTrack(track) {
+    state.track = track === 'zsb' ? 'zsb' : 'main';
+    const zsb = state.track === 'zsb';
+    $('#weekbar').classList.toggle('is-zsb', zsb);
+    $('#view-schedule').classList.toggle('track-zsb', zsb);
+    $$('#trackSwitch button').forEach(function (b) {
+      const on = b.dataset.track === state.track;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    if (zsb) renderZsb();
+    if (isNarrow()) window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   /* ==================== 渲染：日视图（手机） ==================== */
@@ -1146,49 +1221,6 @@
     renderSummary();
   }
 
-  /* ==================== 渲染：课程管理（仅当前周） ==================== */
-
-  function renderManage() {
-    const week = state.week;
-    const units = weekUnits(week);
-    const list = (units || []).slice().sort(sortUnits);
-    $('#manageWeekLabel').textContent = '第 ' + week + ' 周';
-
-    const periods = list.reduce(function (s, c) { return s + c.periods.length; }, 0);
-    $('#weekDataHint').textContent = units
-      ? (list.length
-        ? (list.length + ' 个单元 · ' + periods + ' 节 · 改动只影响这一周')
-        : '这一周确认没有课 · 改动只影响这一周')
-      : '这一周还没有记录（未抓取 / 未排课）';
-
-    if (!list.length) {
-      const prev = nearestDataWeek(week);
-      $('#manageBody').innerHTML = '<tr><td colspan="9" class="muted" style="padding:22px;text-align:center">' +
-        (units ? '第 ' + week + ' 周确认没有课。' : '第 ' + week + ' 周还没有课表数据。') +
-        '点右上角「+ 新增课程」手动添加' +
-        (units ? '。' : (prev ? '，或用上方「复制本周课表到」把第 ' + prev + ' 周复制过来再改。' : '。')) +
-        '</td></tr>';
-    } else {
-      $('#manageBody').innerHTML = list.map(function (c) {
-        const col = unitColor(c);
-        return '<tr data-id="' + esc(c.id) + '">' +
-          '<td data-label="课程名称"><span class="td-val"><span class="course-dot" data-kind="' + col.kind + '" style="--h:' + col.h + '"></span>' + esc(c.name) + '</span></td>' +
-          '<td data-label="星期">' + DAY_SHORT[c.day] + '</td>' +
-          '<td data-label="节次">' + periodText(c) + ' 节</td>' +
-          '<td data-label="时间" style="font-variant-numeric:tabular-nums">' + esc(timeText(c)) + '</td>' +
-          '<td data-label="地点">' + esc(c.room || '—') + '</td>' +
-          '<td data-label="任课教师">' + (c.teacher ? esc(c.teacher) : '<span class="muted">待补充</span>') + '</td>' +
-          '<td class="num" data-label="学分">' + fmtNum(c.credits) + '</td>' +
-          '<td data-label="属性"><span class="tag">' + esc(c.attr) + '</span></td>' +
-          '<td class="ops">' +
-          '<button class="mini-btn edit-only" data-act="edit">编辑</button>' +
-          '<button class="mini-btn del edit-only" data-act="del">删除</button>' +
-          '</td></tr>';
-      }).join('');
-    }
-    renderConflicts();
-  }
-
   function findConflicts() {
     const list = weekUnits(state.week) || [];
     const out = [];
@@ -1201,17 +1233,6 @@
       }
     }
     return out;
-  }
-
-  function renderConflicts() {
-    const box = $('#conflictBox');
-    const cs = findConflicts();
-    if (!cs.length) { box.innerHTML = ''; return; }
-    box.innerHTML = '<div class="conflict"><b>⚠ 本周时间冲突 ' + cs.length + ' 处：</b>' +
-      cs.map(function (pair) {
-        return '「' + esc(pair[0].name) + '」与「' + esc(pair[1].name) + '」在' +
-          DAY_SHORT[pair[0].day] + ' ' + periodText(pair[0]) + ' 节重叠';
-      }).join('；') + '</div>';
   }
 
   /* ==================== 渲染：统计（跨周并集） ==================== */
@@ -1257,6 +1278,22 @@
     ];
 
     $('#statCards').innerHTML = cards.map(function (c) {
+      return '<div class="stat-card">' +
+        '<div class="stat-label">' + esc(c.label) + '</div>' +
+        '<div class="stat-value">' + esc(c.value) + (c.unit ? '<small>' + esc(c.unit) + '</small>' : '') + '</div>' +
+        '<div class="stat-sub">' + esc(c.sub) + '</div>' +
+        '</div>';
+    }).join('');
+
+    const zsbDays = ZSB.dates.length;
+    const zsbPeriodCount = ZSB.units.reduce(function (s, u) { return s + u.periods.length; }, 0);
+    const zsbCards = [
+      { label: '助学班门数', value: String(ZSB.units.length), unit: '门', sub: ZSB.label + ' · ' + ZSB.className },
+      { label: '上课日', value: String(zsbDays), unit: '天', sub: '每周日 · 10-18 起' },
+      { label: '次课', value: String(zsbDays * ZSB.units.length), unit: '次', sub: '每次 8 节' },
+      { label: '总节数', value: String(zsbDays * zsbPeriodCount), unit: '节', sub: '单独统计，不计入主课表' }
+    ];
+    $('#zsbStatCards').innerHTML = zsbCards.map(function (c) {
       return '<div class="stat-card">' +
         '<div class="stat-label">' + esc(c.label) + '</div>' +
         '<div class="stat-value">' + esc(c.value) + (c.unit ? '<small>' + esc(c.unit) + '</small>' : '') + '</div>' +
@@ -1526,7 +1563,6 @@
     state.view = name;
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.view === name); });
     $$('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + name); });
-    if (name === 'manage') renderManage();
     if (name === 'stats') renderStats();
     if (name === 'settings') renderSettings();
     if (name === 'schedule') renderSide();
@@ -1539,7 +1575,6 @@
     renderTimetable();
     renderSchedule();
     renderSide();
-    if (state.view === 'manage') renderManage();
     if (state.view === 'stats') renderStats();
     if (state.view === 'settings') renderSettings();
   }
@@ -1551,7 +1586,6 @@
     renderTimetable();
     renderSchedule();
     renderSummary();
-    if (state.view === 'manage') renderManage();
     buildWeekSelect();
     $('#weekSelect').value = String(state.week);
   }
@@ -1721,7 +1755,6 @@
     });
 
     $('#btnAddCourse').addEventListener('click', function () { openModal(null); });
-    $('#btnAddCourse2').addEventListener('click', function () { openModal(null); });
     $('#btnEmptyAdd').addEventListener('click', function () { openModal(null); });
 
     $('#ttBody').addEventListener('click', function (e) {
@@ -1739,6 +1772,11 @@
       if (!from) return;
       if (!window.confirm('把第 ' + from + ' 周的课表复制到第 ' + state.week + ' 周？会覆盖这一周现有内容。')) return;
       if (copyWeek(from, state.week)) toast('已从第 ' + from + ' 周复制', 'ok');
+    });
+
+    $('#trackSwitch').addEventListener('click', function (e) {
+      const btn = e.target.closest('button[data-track]');
+      if (btn) switchTrack(btn.dataset.track);
     });
 
     $('#segMode').addEventListener('click', function (e) {
@@ -1766,52 +1804,6 @@
       closeDrawer();
       renderAll();
       toast('已从第 ' + state.week + ' 周删除', 'ok');
-    });
-
-    $('#manageBody').addEventListener('click', function (e) {
-      const btn = e.target.closest('button[data-act]');
-      if (!btn) return;
-      if (!requireEdit()) return;
-      const id = btn.closest('tr').dataset.id;
-      const list = weekUnits(state.week) || [];
-      if (btn.dataset.act === 'edit') { openModal(id); return; }
-      const c = list.filter(function (x) { return x.id === id; })[0];
-      if (!c) return;
-      if (!window.confirm('从第 ' + state.week + ' 周删除「' + c.name + '」？其他周不受影响。')) return;
-      state.schedule[state.week] = list.filter(function (x) { return x.id !== id; });
-      renderAll();
-      toast('已删除', 'ok');
-    });
-
-    $('#btnCopyWeek').addEventListener('click', function () {
-      if (!requireEdit()) return;
-      const to = Number($('#copyTargetWeek').value);
-      if (!to) return;
-      const src = state.week;
-      if (!weekUnits(src)) { toast('第 ' + src + ' 周没有数据可复制', 'err'); return; }
-      if (!window.confirm('把第 ' + src + ' 周的课表复制到第 ' + to + ' 周？会覆盖第 ' + to + ' 周现有内容。')) return;
-      if (copyWeek(src, to)) {
-        toast('已复制到第 ' + to + ' 周', 'ok');
-        setWeek(to);
-      }
-    });
-
-    $('#btnClearWeek').addEventListener('click', function () {
-      if (!requireEdit()) return;
-      const w = state.week;
-      if (!window.confirm('把第 ' + w + ' 周清空（标记为确认无课）？其他周不受影响。')) return;
-      state.schedule[w] = [];
-      renderAll();
-      toast('已清空第 ' + w + ' 周', 'ok');
-    });
-
-    $('#btnResetSeed').addEventListener('click', function () {
-      if (!requireEdit()) return;
-      if (!window.confirm('恢复为四周快照的默认数据？（第 3、4、6、7 周有课，第 5 周无课，其余周无数据）当前修改会被覆盖。')) return;
-      state.schedule = seedSchedule();
-      state.week = defaultWeek();
-      renderAll();
-      toast('已恢复默认', 'ok');
     });
 
     $('#modalClose').addEventListener('click', closeModal);
@@ -1891,7 +1883,7 @@
       }
       const tag = (e.target.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
-      if (state.view !== 'schedule') return;
+      if (state.view !== 'schedule' || state.track !== 'main') return;
       if (e.key === 'ArrowLeft') setWeek(state.week - 1);
       if (e.key === 'ArrowRight') setWeek(state.week + 1);
       if (e.key === 't' || e.key === 'T') setWeek(currentWeek());
@@ -1904,7 +1896,7 @@
       touchX = t.clientX; touchY = t.clientY; touchTarget = e.target;
     }, { passive: true });
     $('#view-schedule').addEventListener('touchend', function (e) {
-      if (!touchTarget || !isNarrow()) return;
+      if (!touchTarget || !isNarrow() || state.track !== 'main') return;
       const scroll = $('#tableScroll');
       const scrollable = scroll && !scroll.hidden && scroll.scrollWidth > scroll.clientWidth + 4;
       if (scrollable && touchTarget.closest && touchTarget.closest('#tableScroll')) return;

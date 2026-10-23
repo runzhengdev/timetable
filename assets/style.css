@@ -316,6 +316,31 @@ body.readonly .edit-only { display: none !important; }
 
 .weekbar-spacer { flex: 1 1 auto; }
 
+/* 课表轨道切换：主课表 / 助学班 */
+.week-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.track-switch { flex: none; }
+.zsb-label { display: none; }
+.weekbar.is-zsb .week-controls { display: none; }
+.weekbar.is-zsb .zsb-label { display: flex; }
+
+/* ---------------- 助学班（日期列） ---------------- */
+
+#view-schedule.track-zsb #mainLayout { display: none; }
+.zsb-panel { display: none; }
+#view-schedule.track-zsb .zsb-panel { display: block; }
+.zsb-table { min-width: 780px; }
+.zsb-table thead th { font-size: 12px; padding: 8px 4px; }
+.zsb-table td.slot { height: 62px; }
+.zsb-chip { cursor: default; }
+.zsb-note { margin: 10px 14px 14px; }
+
 .select, .input {
   height: 34px;
   padding: 0 10px;

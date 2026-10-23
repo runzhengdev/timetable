@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f4f6fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f1219" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0f1219">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b5cf6'/%3E%3Ctext x='32' y='45' font-size='34' font-family='sans-serif' text-anchor='middle' fill='%23fff'%3E%E8%AF%BE%3C/text%3E%3C/svg%3E">
 <title>我的教务系统 · 课表管理</title>
-<link rel="stylesheet" href="assets/style.css?v=6">
+<link rel="stylesheet" href="assets/style.css?v=10">
 </head>
-<body data-theme="light">
+<body data-theme="dark">
 
 <header class="topbar">
   <div class="brand">
@@ -22,7 +22,6 @@
 
   <nav class="tabs" id="tabs">
     <button class="tab active" data-view="schedule" data-ico="📅"><span class="tab-txt">课表</span></button>
-    <button class="tab" data-view="manage" data-ico="📚"><span class="tab-txt">课程管理</span></button>
     <button class="tab" data-view="stats" data-ico="📊"><span class="tab-txt">统计分析</span></button>
     <button class="tab" data-view="settings" data-ico="⚙️"><span class="tab-txt">设置</span></button>
   </nav>
@@ -40,33 +39,45 @@
   <!-- ================= 课表视图 ================= -->
   <section class="view active" id="view-schedule">
 
-    <div class="weekbar card">
-      <button class="week-nav" id="btnPrevWeek" title="上一周（←）">‹</button>
-      <div class="week-label">
-        <strong id="weekTitle">第 3 周</strong>
-        <span id="weekRange">10-19 ~ 10-25</span>
-      </div>
-      <button class="week-nav" id="btnNextWeek" title="下一周（→）">›</button>
-
-      <div class="weekbar-spacer"></div>
-
-      <div class="seg" id="segMode" role="group" aria-label="课表显示模式">
-        <button type="button" data-mode="day">日</button>
-        <button type="button" data-mode="grid" class="active">周</button>
+    <div class="weekbar card" id="weekbar">
+      <div class="seg track-switch" id="trackSwitch" role="group" aria-label="课表轨道">
+        <button type="button" data-track="main" class="active" aria-pressed="true">主课表</button>
+        <button type="button" data-track="zsb" aria-pressed="false">助学班</button>
       </div>
 
-      <select id="weekSelect" class="select" title="跳转到指定周"></select>
-      <button class="btn ghost" id="btnThisWeek">回到本周</button>
-      <button class="btn primary edit-only" id="btnAddCourse">+ 新增课程</button>
+      <div class="week-controls" id="weekControls">
+        <button class="week-nav" id="btnPrevWeek" title="上一周（←）">‹</button>
+        <div class="week-label">
+          <strong id="weekTitle">第 3 周</strong>
+          <span id="weekRange">10-19 ~ 10-25</span>
+        </div>
+        <button class="week-nav" id="btnNextWeek" title="下一周（→）">›</button>
+
+        <div class="weekbar-spacer"></div>
+
+        <div class="seg" id="segMode" role="group" aria-label="课表显示模式">
+          <button type="button" data-mode="day">日</button>
+          <button type="button" data-mode="grid" class="active">周</button>
+        </div>
+
+        <select id="weekSelect" class="select" title="跳转到指定周"></select>
+        <button class="btn ghost" id="btnThisWeek">回到本周</button>
+        <button class="btn primary edit-only" id="btnAddCourse">+ 新增课程</button>
+      </div>
+
+      <div class="week-label zsb-label" id="zsbLabel">
+        <strong>专升本助学班</strong>
+        <span>26 秋插本 1 班 · 8 个上课日 · 每周日</span>
+      </div>
     </div>
 
-    <div class="layout">
+    <div class="layout" id="mainLayout">
       <div class="card table-card">
         <div class="legend-bar">
           <span class="legend-item"><i class="legend-dot" data-kind="core"></i>专业课</span>
-          <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>次要（英语）</span>
+          <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>次要</span>
           <span class="legend-item"><i class="legend-dot" data-kind="light"></i>常规 / 水课</span>
-          <span class="legend-hint">颜色按课程类别分档，可在「课程管理 → 编辑」里改</span>
+          <span class="legend-hint">颜色按课程类别分档，点开课程 → 编辑可改</span>
         </div>
         <div class="table-scroll" id="tableScroll">
           <table class="timetable" id="timetable">
@@ -78,7 +89,7 @@
         <div class="empty-week" id="emptyWeek" hidden>
           <div class="empty-icon">🌿</div>
           <p><strong id="emptyTitle">本周没有课程</strong></p>
-          <p class="muted" id="emptyNote">可在「课程管理」里新增课程。</p>
+          <p class="muted" id="emptyNote">可在右上角「+ 新增课程」添加。</p>
           <div class="empty-actions" id="emptyActions">
             <button class="btn primary edit-only" id="btnEmptyAdd">+ 添加课程</button>
             <button class="btn ghost edit-only" id="btnEmptyCopy" hidden>从其他周复制</button>
@@ -103,49 +114,20 @@
         </div>
       </aside>
     </div>
-  </section>
 
-  <!-- ================= 课程管理 ================= -->
-  <section class="view" id="view-manage">
-    <div class="section-head">
-      <div>
-        <h2>课程管理 · <span id="manageWeekLabel">第 3 周</span></h2>
-        <p class="muted">课表按周存快照：这里的增删改<strong>只影响当前这一周</strong>，不会套用到其他周。用顶部周次切换器或下面的复制按钮处理其他周。</p>
-      </div>
-      <div class="section-actions">
-        <button class="btn primary edit-only" id="btnAddCourse2">+ 新增课程</button>
-        <button class="btn ghost edit-only" id="btnResetSeed">恢复默认课表</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="toolbar">
-        <span class="toolbar-label">复制本周课表到</span>
-        <select id="copyTargetWeek" class="select"></select>
-        <button class="btn edit-only" id="btnCopyWeek">复制</button>
-        <span class="toolbar-sep"></span>
-        <button class="btn ghost danger edit-only" id="btnClearWeek">清空本周</button>
-        <span class="toolbar-hint" id="weekDataHint"></span>
+    <div class="card table-card zsb-panel" id="zsbPanel">
+      <div class="legend-bar">
+        <span class="legend-item"><i class="legend-dot" data-kind="core"></i>英语</span>
+        <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>政治</span>
+        <span class="legend-hint">农工商普通专升本助学班 · 26 秋插本 1 班 · 每周日 8 节（09:00–17:00）</span>
       </div>
       <div class="table-scroll">
-        <table class="datatable responsive">
-          <thead>
-            <tr>
-              <th>课程名称</th>
-              <th>星期</th>
-              <th>节次</th>
-              <th>时间</th>
-              <th>地点</th>
-              <th>任课教师</th>
-              <th class="num">学分</th>
-              <th>属性</th>
-              <th class="ops">操作</th>
-            </tr>
-          </thead>
-          <tbody id="manageBody"></tbody>
+        <table class="timetable zsb-table" id="zsbTable">
+          <thead id="zsbHead"></thead>
+          <tbody id="zsbBody"></tbody>
         </table>
       </div>
-      <div id="conflictBox"></div>
+      <p class="hint zsb-note">共 8 个上课日；10-25、11-01、11-08 三个周日因军训停课，不在表内。</p>
     </div>
   </section>
 
@@ -191,6 +173,12 @@
           <tbody id="statsBody"></tbody>
         </table>
       </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2 class="card-title">专升本助学班 · 单独统计</h2>
+      <div class="stat-grid" id="zsbStatCards"></div>
+      <p class="hint">农工商专升本助学班 26 秋插本 1 班：每周日 8 节（09:00–17:00），共 8 个上课日。课时与门数单独计算，不计入上方主课表。</p>
     </div>
   </section>
 
@@ -318,7 +306,7 @@
           <div class="period-picker" id="fPeriods"></div>
         </div>
 
-        <p class="scope-note">作用范围：<strong id="fScope">仅第 3 周</strong>。其他周不会跟着变，要批量改请用「复制本周到」。</p>
+        <p class="scope-note">作用范围：<strong id="fScope">仅第 3 周</strong>。其他周不会跟着变；空周可用卡片上的「从第 N 周复制」先复制再改。</p>
 
         <p class="form-error" id="formError" hidden></p>
       </div>
@@ -333,6 +321,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/app.js?v=6"></script>
+<script src="assets/app.js?v=10"></script>
 </body>
 </html>
