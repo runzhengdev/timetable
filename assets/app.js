@@ -33,11 +33,14 @@
   const ATTRS = ['必修', '选修', '限选', '任选'];
   const PALETTE = [232, 205, 268, 340, 163, 24, 190, 300, 45, 118];
 
-  const KEY_SCHEDULE = 'jwxt.schedule.v2';
-  const KEY_SCHEDULE_OLD = 'jwxt.schedule.v1';
-  const KEY_TERMS = 'jwxt.terms.v1';
-  const KEY_WIPED = 'jwxt.wipedTerms.v1';
+  /* 只有外观偏好留在本机；课表内容每次加载都以内置数据为准 */
   const KEY_SETTINGS = 'jwxt.settings.v1';
+
+  /* 早期版本写入本机、现在已不再沿用的键（加载时清理） */
+  const STALE_KEYS = [
+    'jwxt.schedule.v2', 'jwxt.schedule.v1', 'jwxt.terms.v1', 'jwxt.wipedTerms.v1',
+    'jwxt.seedRev', 'jwxt.seedSynced', 'jwxt.prevSchedule', 'jwxt.courses.v1'
+  ];
 
   /* 任课教师（按课名映射，缺的留空显示“待补充”） */
   const TEACHERS = {
@@ -67,7 +70,6 @@
     { key: '2024S2', grade: 2024, index: 2, label: '2024 级 · 第 2 学期', termStart: '2025-03-03' }
   ];
   const ACTIVE_TERM = '2026S1';   // 本学期（2026 级大一上）
-  const SEED_REV = 3;              // 内置课表版本：变了就覆盖旧数据（旧值留在 jwxt.prevSchedule）
 
   const DEFAULT_SETTINGS = { termStart: '2026-08-31', totalWeeks: 20, theme: 'light', viewMode: 'auto' };
 
@@ -390,14 +392,12 @@
     schedule: {},          // 当前学期的 { 周: [unit…] }
     terms: {},             // { '2026S1': {label, termStart, totalWeeks, schedule}, … }
     activeTerm: ACTIVE_TERM,
-    wiped: [],
     settings: Object.assign({}, DEFAULT_SETTINGS),
     week: 1,
     view: 'schedule',
     editingId: null,
     drawerId: null,
     copyFromWeek: null,
-    seedAdded: [],
     kindDirty: false
   };
   let storageOK = true;
@@ -427,12 +427,15 @@
     if (hint) hint.hidden = editUnlocked;
   }
 
-  function resetLocalData() {
-    ['jwxt.schedule.v2', 'jwxt.schedule.v1', 'jwxt.terms.v1', 'jwxt.wipedTerms.v1',
-      'jwxt.settings.v1', 'jwxt.seedRev', 'jwxt.seedSynced', 'jwxt.prevSchedule',
-      'jwxt.courses.v1'].forEach(function (k) {
+  function clearStaleData() {
+    STALE_KEYS.forEach(function (k) {
       try { window.localStorage.removeItem(k); } catch (e) { /* 忽略 */ }
     });
+  }
+
+  function resetLocalData() {
+    try { window.localStorage.removeItem(KEY_SETTINGS); } catch (e) { /* 忽略 */ }
+    clearStaleData();
     window.location.reload();
   }
 
@@ -592,24 +595,17 @@
     t.totalWeeks = state.settings.totalWeeks;
   }
 
-  function persistTerms() {
-    syncTermFromState();
-    safeSet(KEY_TERMS, JSON.stringify({ active: state.activeTerm, terms: state.terms }));
-  }
-
-  function persistSchedule() { persistTerms(); }
-
   function persistSettings() {
-    syncTermFromState();
-    safeSet(KEY_SETTINGS, JSON.stringify(state.settings));
-    safeSet(KEY_TERMS, JSON.stringify({ active: state.activeTerm, terms: state.terms }));
+    safeSet(KEY_SETTINGS, JSON.stringify({
+      theme: state.settings.theme,
+      viewMode: state.settings.viewMode
+    }));
   }
 
   function switchTerm(key) {
     if (!state.terms[key] || key === state.activeTerm) return false;
     syncTermFromState();
     loadTermInto(key);
-    persistTerms();
     state.week = defaultWeek();
     buildTermSelect();
     buildFormOptions();
@@ -618,24 +614,9 @@
     return true;
   }
 
-  function readLegacySchedule() {
-    const raw = safeGet(KEY_SCHEDULE) || safeGet(KEY_SCHEDULE_OLD);
-    if (!raw) return null;
-    try {
-      const s = normalizeSchedule(JSON.parse(raw));
-      return Object.keys(s).length ? s : null;
-    } catch (e) { return null; }
-  }
-
-  function markWiped(termKey) {
-    const list = state.wiped || [];
-    if (list.indexOf(termKey) === -1) list.push(termKey);
-    state.wiped = list;
-    safeSet(KEY_WIPED, JSON.stringify(list));
-  }
-
   function loadState() {
-    // 全局偏好（主题 / 显示模式）
+    // 主题 / 显示模式是本机偏好；课表内容每次加载都以仓库里的内置数据为准，
+    // 浏览器里残留的旧修改（包括删除）不会沿用。
     const rawSettings = safeGet(KEY_SETTINGS);
     if (rawSettings) {
       try {
@@ -646,77 +627,11 @@
         }
       } catch (e) { /* 忽略损坏的设置 */ }
     }
-    try { state.wiped = JSON.parse(safeGet(KEY_WIPED) || '[]'); } catch (e) { state.wiped = []; }
 
-    // 1) 已有学期容器？
-    const rawTerms = safeGet(KEY_TERMS);
-    if (rawTerms) {
-      try {
-        const parsed = JSON.parse(rawTerms);
-        const terms = {};
-        Object.keys(parsed.terms || {}).forEach(function (k) {
-          terms[k] = normalizeTerm(k, parsed.terms[k]);
-        });
-        if (Object.keys(terms).length) {
-          state.terms = terms;
-          state.activeTerm = terms[parsed.active] ? parsed.active : Object.keys(terms)[0];
-        }
-      } catch (e) { state.terms = {}; }
-    }
-
-    state.seedAdded = [];
-
-    // 2) 没有 → 建 6 个学期，并把旧版单学期数据迁进 2026S1
-    if (!Object.keys(state.terms).length) {
-      state.terms = buildTermSeed();
-      const legacy = readLegacySchedule();
-      if (legacy) {
-        state.terms[ACTIVE_TERM].schedule = legacy;
-        try {
-          const old = JSON.parse(safeGet(KEY_SETTINGS) || '{}');
-          if (/^\d{4}-\d{2}-\d{2}$/.test(old.termStart)) state.terms[ACTIVE_TERM].termStart = old.termStart;
-          const otw = Number(old.totalWeeks);
-          if (Number.isFinite(otw)) state.terms[ACTIVE_TERM].totalWeeks = Math.min(30, Math.max(1, Math.round(otw)));
-        } catch (e) { /* 忽略 */ }
-      }
-      state.activeTerm = ACTIVE_TERM;
-    }
-
-    // 3) 载入当前学期
-    loadTermInto(state.activeTerm);
+    clearStaleData();
+    state.terms = buildTermSeed();
+    loadTermInto(ACTIVE_TERM);
     if (!state.schedule) state.schedule = {};
-
-    // 4) 内置快照同步（只作用于本学期；用户主动清空过的学期不动）
-    const seeded = seedSchedule();
-    const own = state.terms[ACTIVE_TERM];
-    state.seedUpdated = false;
-    if (own && state.wiped.indexOf(ACTIVE_TERM) === -1) {
-      const rev = Number(safeGet('jwxt.seedRev') || 0);
-      if (rev < SEED_REV) {
-        // 内置数据升级（例如“第八周修正”）：以种子为准覆盖，旧值留一份在 jwxt.prevSchedule
-        const prev = {};
-        Object.keys(seeded).forEach(function (k) {
-          if (k in own.schedule && JSON.stringify(own.schedule[k]) !== JSON.stringify(seeded[k])) {
-            prev[k] = own.schedule[k];
-          }
-          own.schedule[k] = seeded[k];
-        });
-        if (Object.keys(prev).length) safeSet('jwxt.prevSchedule', JSON.stringify(prev));
-        safeSet('jwxt.seedRev', String(SEED_REV));
-        state.seedUpdated = true;
-      } else {
-        Object.keys(seeded).forEach(function (k) {
-          if (!(k in own.schedule)) {
-            own.schedule[k] = seeded[k];
-            state.seedAdded.push(Number(k));
-          }
-        });
-      }
-      if (state.activeTerm === ACTIVE_TERM) state.schedule = own.schedule;
-    }
-
-    persistTerms();
-    if (state.seedAdded.length) safeSet('jwxt.seedSynced', '1');
   }
 
   /* 手动「重新同步内置数据」：把内置周里缺失的补进当前学期，不覆盖已有周 */
@@ -730,7 +645,6 @@
       }
     });
     if (!added.length) return [];
-    persistTerms();
     return added;
   }
 
@@ -1595,7 +1509,6 @@
     if (idx >= 0) list[idx] = u; else list.push(u);
     state.schedule[week] = list;
 
-    persistSchedule();
     closeModal();
     renderAll();
     toast((idx >= 0 ? '已更新' : '已添加') + '：第 ' + week + ' 周', 'ok');
@@ -1651,7 +1564,6 @@
     if (!src) { toast('第 ' + from + ' 周没有数据可复制', 'err'); return false; }
     if (from === to) return false;
     state.schedule[to] = src.map(cloneUnit).filter(Boolean);
-    persistSchedule();
     renderAll();
     return true;
   }
@@ -1721,7 +1633,6 @@
           state.terms = terms;
           state.activeTerm = terms[data.activeTerm] ? data.activeTerm : Object.keys(terms)[0];
           loadTermInto(state.activeTerm);
-          persistTerms();
           buildTermSelect();
           state.week = defaultWeek();
           buildFormOptions();
@@ -1746,7 +1657,6 @@
           const tw = Number(data.settings.totalWeeks);
           if (Number.isFinite(tw)) state.settings.totalWeeks = Math.min(30, Math.max(1, Math.round(tw)));
         }
-        persistSchedule();
         persistSettings();
         state.week = defaultWeek();
         renderAll();
@@ -1853,7 +1763,6 @@
       if (!c) return;
       if (!window.confirm('从第 ' + state.week + ' 周删除「' + c.name + '」（' + DAY_SHORT[c.day] + ' ' + periodText(c) + ' 节）？其他周不受影响。')) return;
       state.schedule[state.week] = list.filter(function (x) { return x.id !== id; });
-      persistSchedule();
       closeDrawer();
       renderAll();
       toast('已从第 ' + state.week + ' 周删除', 'ok');
@@ -1870,7 +1779,6 @@
       if (!c) return;
       if (!window.confirm('从第 ' + state.week + ' 周删除「' + c.name + '」？其他周不受影响。')) return;
       state.schedule[state.week] = list.filter(function (x) { return x.id !== id; });
-      persistSchedule();
       renderAll();
       toast('已删除', 'ok');
     });
@@ -1893,7 +1801,6 @@
       const w = state.week;
       if (!window.confirm('把第 ' + w + ' 周清空（标记为确认无课）？其他周不受影响。')) return;
       state.schedule[w] = [];
-      persistSchedule();
       renderAll();
       toast('已清空第 ' + w + ' 周', 'ok');
     });
@@ -1902,7 +1809,6 @@
       if (!requireEdit()) return;
       if (!window.confirm('恢复为四周快照的默认数据？（第 3、4、6、7 周有课，第 5 周无课，其余周无数据）当前修改会被覆盖。')) return;
       state.schedule = seedSchedule();
-      persistSchedule();
       state.week = defaultWeek();
       renderAll();
       toast('已恢复默认', 'ok');
@@ -1937,7 +1843,6 @@
       });
 
       persistSettings();
-      persistSchedule();
       state.week = Math.min(state.week, state.settings.totalWeeks);
       $('#inputTermStart').value = state.settings.termStart;
       renderAll();
@@ -1975,8 +1880,6 @@
       const label = (state.terms[state.activeTerm] || {}).label || '';
       if (!window.confirm('清空「' + label + '」的全部周次？其他学期不受影响，建议先导出备份。')) return;
       state.schedule = {};
-      markWiped(state.activeTerm);
-      persistSchedule();
       renderAll();
       toast('已清空本学期的所有周', 'ok');
     });
@@ -2046,13 +1949,7 @@
     applyEditMode();
 
     if (!storageOK) {
-      toast('本机禁止本地存储，修改不会保存，请用「导出 JSON」备份', 'err');
-    } else if (state.seedUpdated) {
-      toast('内置课表已更新：20 周齐全（含第 8 周修正版）', 'ok');
-    } else if (state.seedAdded && state.seedAdded.length) {
-      toast('已补入新数据：第 ' + state.seedAdded.join('、') + ' 周', 'ok');
-    } else if (window.localStorage.getItem('jwxt.courses.v1') && !window.localStorage.getItem(KEY_SCHEDULE)) {
-      toast('已升级为「按周快照」模型，旧的循环课表已清除', 'ok');
+      toast('本机禁止本地存储：主题等偏好不会保存，课表内容以页面内置数据为准', 'err');
     } else if (!hasWeekData(state.week)) {
       const prev = nearestDataWeek(state.week);
       if (prev) toast('第 ' + state.week + ' 周还没记录，可用「从第 ' + prev + ' 周复制」', 'ok');
