@@ -86,8 +86,9 @@
   };
 
   /* 教务导出的理论课表（独立轨道）：整学期一览，与逐周实际课表分开 */
-  const THEORY = {
-    source: '教务「学生个人课表」导出 · 2026-2027 第 1 学期',
+  /* 教务导出的理论课表，按学期存放：{ [termKey]: { source, units } } */
+  const THEORY_BY_TERM = {
+    '2026S1': {    source: '教务「学生个人课表」导出 · 2026-2027 第 1 学期',
     units: [
     { name: "金融科技基础", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2], weeks: [4, 7, 8, 11, 12, 13, 14, 15, 16, 17] },
     { name: "思想道德与法治", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4], weeks: [4, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18] },
@@ -119,11 +120,15 @@
     { name: "习近平经济思想概论", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2], weeks: [15, 16, 17] },
     { name: "会计基础", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5], weeks: [3, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17] }
     ]
+    }
   };
 
   /* 专升本助学班（独立轨道）：每周日 8 节，与主课表互不影响 */
-  const ZSB = {
+  /* 专升本助学班，按学期存放（每个学期各自的班级与上课日） */
+  const ZSB_BY_TERM = {
+    '2026S1': {
     label: '专升本助学班',
+    note: '共 8 个上课日；10-25、11-01、11-08 三个周日因军训停课，不在表内。',
     className: '26 秋插本 1 班',
     periods: [
       { no: 1, time: '09:00-09:45' },
@@ -143,6 +148,7 @@
       { name: '英语（助学班）', periods: [1, 2, 3, 4], kind: 'core', hue: 42 },
       { name: '政治（助学班）', periods: [5, 6, 7, 8], kind: 'minor', hue: 212 }
     ]
+    }
   };
 
   /* 逐周快照种子：来自 UI 目录各周抓取的课表；空数组 = 确认无课；没有的周 = 无数据 */
@@ -674,6 +680,8 @@
     buildTermSelect();
     buildFormOptions();
     renderAll();
+    if (state.track === 'zsb') renderZsb();
+    if (state.track === 'theory') renderTheory();
     if (state.view === 'settings') renderSettings();
     return true;
   }
@@ -980,13 +988,24 @@
 
   /* ==================== 渲染：助学班（日期列） ==================== */
 
-  function zsbTimeRange(u) {
-    const first = ZSB.periods[u.periods[0] - 1];
-    const last = ZSB.periods[u.periods[u.periods.length - 1] - 1];
+  function zsbTimeRange(u, zsbData) {
+    const data = zsbData || STATE_ZSB();
+    if (!data) return '';
+    const first = data.periods[u.periods[0] - 1];
+    const last = data.periods[u.periods[u.periods.length - 1] - 1];
     return first.time.split('-')[0] + '-' + last.time.split('-')[1];
   }
 
   function renderZsb() {
+    const ZSB = STATE_ZSB();
+    if (!ZSB) {
+      $('#zsbHead').innerHTML = '';
+      $('#zsbBody').innerHTML = '<tr><td class="muted" style="padding:26px;text-align:center">' +
+        '这个学期还没有助学班安排。</td></tr>';
+      const note = $('.zsb-note');
+      if (note) note.textContent = '该学期未录入助学班数据（目前只有 2026 级 · 第 1 学期有）。';
+      return;
+    }
     const wd = '日一二三四五六';
     let head = '<tr><th class="block-cell">节次</th>';
     ZSB.dates.forEach(function (iso) {
@@ -1003,7 +1022,7 @@
       body += '<th class="block-cell"><span class="blk-no">第 ' + p.no + ' 节</span>' +
         '<span class="blk-time">' + p.time + '</span></th>';
       if (start) {
-        const range = zsbTimeRange(start);
+        const range = zsbTimeRange(start, ZSB);
         ZSB.dates.forEach(function (iso) {
           body += '<td class="slot" rowspan="' + start.periods.length + '">' +
             '<div class="chip zsb-chip" data-kind="' + start.kind + '" style="--h:' + start.hue + '" title="' +
@@ -1016,6 +1035,8 @@
       body += '</tr>';
     });
     $('#zsbBody').innerHTML = body;
+    const noteEl = $('.zsb-note');
+    if (noteEl) noteEl.textContent = ZSB.note || ('共 ' + ZSB.dates.length + ' 个上课日 · 每周日');
   }
 
   function switchTrack(track) {
@@ -1031,7 +1052,16 @@
       b.classList.toggle('active', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    if (zsb) renderZsb();
+    if (zsb) {
+      renderZsb();
+      const zsbData = STATE_ZSB();
+      const span = $('#zsbLabel span');
+      if (span) {
+        span.textContent = zsbData
+          ? (zsbData.className + ' · ' + zsbData.dates.length + ' 个上课日 · 每周日')
+          : ('该学期暂无助学班安排（' + termLabel() + '）');
+      }
+    }
     if (theoryTrack) {
       try {
         renderTheory();
@@ -1077,7 +1107,21 @@
   }
 
   function renderTheory() {
-    const units = (STATE_THEORY().units || []).slice();
+    const tspan = $('#theoryLabel span');
+    if (tspan) tspan.textContent = '教务导出 · ' + termLabel();
+
+    const data = STATE_THEORY();
+    const units = data ? (data.units || []).slice() : [];
+
+    if (!units.length) {
+      $('#theoryHead').innerHTML = '';
+      $('#theoryBody').innerHTML = '<tr><td colspan="7" class="muted" style="padding:26px;text-align:center">' +
+        '这个学期还没有理论课表数据。<br>' +
+        '<span style="font-size:12px">拿到教务导出的课表后，用 tools/build_schedule.py 生成 JSON，' +
+        '再到「设置 → 导入 JSON」导入。</span></td></tr>';
+      $('#theoryNote').textContent = '当前学期：' + termLabel() + ' · 暂无理论课表数据';
+      return;
+    }
 
     let head = '<tr><th class="block-cell">周 / 节次</th>';
     DAYS.forEach(function (d) { head += '<th>' + DAY_NAMES[d] + '</th>'; });
@@ -1119,7 +1163,13 @@
       ' · 单元节次合计 ' + periodsAll + ' 小节（不按周累加；体育等实践课不在其中）';
   }
 
-  function STATE_THEORY() { return typeof THEORY !== 'undefined' ? THEORY : { source: '', units: [] }; }
+  function termLabel() {
+    const t = state.terms[state.activeTerm];
+    return t ? t.label : state.activeTerm;
+  }
+
+  function STATE_THEORY() { return THEORY_BY_TERM[state.activeTerm] || null; }
+  function STATE_ZSB() { return ZSB_BY_TERM[state.activeTerm] || null; }
 
   /* ==================== 渲染：日视图（手机） ==================== */
 
@@ -1412,12 +1462,15 @@
         '</div>';
     }).join('');
 
-    const zsbDays = ZSB.dates.length;
-    const zsbPeriodCount = ZSB.units.reduce(function (s, u) { return s + u.periods.length; }, 0);
+    const zsbData = STATE_ZSB();
+    const zsbDays = zsbData ? zsbData.dates.length : 0;
+    const zsbPeriodCount = zsbData
+      ? zsbData.units.reduce(function (s, u) { return s + u.periods.length; }, 0)
+      : 0;
     const zsbCards = [
-      { label: '助学班门数', value: String(ZSB.units.length), unit: '门', sub: ZSB.label + ' · ' + ZSB.className },
+      { label: '助学班门数', value: String(zsbData ? zsbData.units.length : 0), unit: '门', sub: zsbData ? (zsbData.label + ' · ' + zsbData.className) : '本学期未录入' },
       { label: '上课日', value: String(zsbDays), unit: '天', sub: '每周日 · 10-18 起' },
-      { label: '次课', value: String(zsbDays * ZSB.units.length), unit: '次', sub: '每次 8 节' },
+      { label: '次课', value: String(zsbDays * (zsbData ? zsbData.units.length : 0)), unit: '次', sub: '每次 8 节' },
       { label: '总节数', value: String(zsbDays * zsbPeriodCount), unit: '节', sub: '单独统计，不计入主课表' }
     ];
     $('#zsbStatCards').innerHTML = zsbCards.map(function (c) {
