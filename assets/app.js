@@ -62,7 +62,11 @@
     {
       key: '2026S1', grade: 2026, index: 1, label: '2026 级 · 第 1 学期', termStart: '2026-08-31',
       // 军训：10-24（周六）~ 11-06（周五），横跨第 8 周末 + 第 9 周 + 第 10 周前半
-      events: [{ type: 'military', label: '军训', from: '2026-10-24', to: '2026-11-06' }]
+      events: [{ type: 'military', label: '军训', from: '2026-10-24', to: '2026-11-06' }],
+      extraCourses: [
+        { name: '军事技能', credits: 2, hours: 112, attr: '必修', note: '军训 10-24 ~ 11-06 · 不排进周课表' },
+        { name: '军事理论', credits: 2, hours: 36, attr: '必修', note: '军训期间集中授课 · 不排进周课表' }
+      ]
     },
     { key: '2026S2', grade: 2026, index: 2, label: '2026 级 · 第 2 学期', termStart: '2027-03-01' },
     { key: '2025S1', grade: 2025, index: 1, label: '2025 级 · 第 1 学期', termStart: '2025-09-01' },
@@ -733,6 +737,7 @@
         termStart: t.termStart,
         totalWeeks: DEFAULT_SETTINGS.totalWeeks,
         events: (t.events || []).map(function (e) { return Object.assign({}, e); }),
+        extraCourses: normalizeExtraCourses(t.extraCourses),
         // 只有本学期有真实快照，其他学期先留空，后面按需填
         schedule: t.key === ACTIVE_TERM ? seedSchedule() : {}
       };
@@ -753,8 +758,29 @@
         : (base.termStart || DEFAULT_SETTINGS.termStart),
       totalWeeks: Number.isFinite(tw) ? Math.min(30, Math.max(1, Math.round(tw))) : (base.totalWeeks || 20),
       events: normalizeEvents(raw && raw.events, base.events),
+      extraCourses: normalizeExtraCourses((raw && raw.extraCourses) || base.extraCourses),
       schedule: normalizeSchedule(raw && raw.schedule)
     };
+  }
+
+  /* 学期内不排进周课表、但计入总学分的课程（军训等） */
+  function normalizeExtraCourses(list) {
+    if (!Array.isArray(list)) return [];
+    return list.map(function (c) {
+      return {
+        name: String((c && c.name) || '').trim(),
+        credits: Number(c && c.credits) || 0,
+        hours: Number(c && c.hours) || 0,
+        attr: String((c && c.attr) || '必修'),
+        note: String((c && c.note) || '不计入周课表'),
+        offSchedule: true
+      };
+    }).filter(function (c) { return c.name; });
+  }
+
+  function extraCoursesOfTerm() {
+    const t = state.terms[state.activeTerm];
+    return (t && Array.isArray(t.extraCourses)) ? t.extraCourses : [];
   }
 
   function sortedTerms() {
@@ -1692,17 +1718,36 @@
         d.units.push({ week: w, day: u.day, periods: u.periods, room: u.room });
       });
     });
-    return Object.keys(map).map(function (k) {
+    const rows = Object.keys(map).map(function (k) {
       const d = map[k];
       d.weekCount = Object.keys(d.weeks).length;
       return d;
-    }).sort(function (a, b) { return b.credits - a.credits || a.name.localeCompare(b.name, 'zh'); });
+    });
+
+    /* 军训类：有学分、但没有排进任何一周 */
+    extraCoursesOfTerm().forEach(function (c) {
+      if (rows.some(function (r) { return r.name === c.name; })) return;
+      rows.push({
+        name: c.name,
+        credits: c.credits,
+        attr: c.attr,
+        weeks: {},
+        units: [],
+        weekCount: 0,
+        offSchedule: true,
+        note: c.note
+      });
+    });
+
+    return rows.sort(function (a, b) { return b.credits - a.credits || a.name.localeCompare(b.name, 'zh'); });
   }
 
   function renderStats() {
     const list = courseStats();
     const weeks = dataWeeks();
     const totalCredits = list.reduce(function (s, c) { return s + c.credits; }, 0);
+    const extraCredits = list.filter(function (c) { return c.offSchedule; })
+      .reduce(function (s, c) { return s + c.credits; }, 0);
     const maxLoad = weeks.reduce(function (m, w) {
       const n = (state.schedule[w] || []).reduce(function (s, u) { return s + u.periods.length; }, 0);
       return Math.max(m, n);
@@ -1714,7 +1759,9 @@
     });
 
     const cards = [
-      { label: '总学分（去重）', value: fmtNum(totalCredits), unit: '分', sub: list.length + ' 门课 · 必修 ' + fmtNum(list.filter(function (c) { return c.attr === '必修'; }).reduce(function (s, c) { return s + c.credits; }, 0)) },
+      { label: '总学分（去重）', value: fmtNum(totalCredits), unit: '分',
+        sub: list.length + ' 门课 · 必修 ' + fmtNum(list.filter(function (c) { return c.attr === '必修'; }).reduce(function (s, c) { return s + c.credits; }, 0)) +
+          (extraCredits ? '（含军训 ' + fmtNum(extraCredits) + ' 分）' : '') },
       { label: '已记录周', value: String(weeks.length), unit: '周', sub: '有数据的周：第 ' + (weeks.join('、') || '—') + ' 周' },
       { label: '单周最多课节', value: String(maxLoad), unit: '节', sub: '涉及 ' + Object.keys(weekdaySet).length + ' 个上课日' },
       { label: '上课单元', value: String(unitCount), unit: '个', sub: '所有已记录周合计' }
@@ -1790,10 +1837,10 @@
         '<td class="num" data-label="学分">' + fmtNum(c.credits) + '</td>' +
         '<td data-label="属性"><span class="tag">' + esc(c.attr) + '</span></td>' +
         '<td data-label="类别"><span class="kind-tag" data-kind="' + col.kind + '">' + KIND_LABEL[col.kind] + '</span></td>' +
-        '<td data-label="最近周次">' + (lastWeek ? ('第 ' + lastWeek + ' 周') : '—') + '</td>' +
-        '<td data-label="最近安排">' + esc(arrangement || '—') + '</td>' +
-        '<td class="num" data-label="出现周数">' + c.weekCount + '</td>' +
-        '<td class="num" data-label="最近周小节">' + lastPeriods + '</td>' +
+        '<td data-label="最近周次">' + (c.offSchedule ? '军训' : (lastWeek ? ('第 ' + lastWeek + ' 周') : '—')) + '</td>' +
+        '<td data-label="最近安排">' + esc(c.offSchedule ? (c.note || '军训 · 不排进周课表') : (arrangement || '—')) + '</td>' +
+        '<td class="num" data-label="出现周数">' + (c.offSchedule ? '—' : c.weekCount) + '</td>' +
+        '<td class="num" data-label="最近周小节">' + (c.offSchedule ? '—' : lastPeriods) + '</td>' +
         '</tr>';
     }).join('') || '<tr><td colspan="6" class="muted" style="padding:22px;text-align:center">暂无课程。</td></tr>';
   }
