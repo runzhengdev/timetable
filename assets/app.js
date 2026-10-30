@@ -1729,7 +1729,12 @@
       });
     });
 
-    return rows.sort(function (a, b) { return b.credits - a.credits || a.name.localeCompare(b.name, 'zh'); });
+    return rows.sort(function (a, b) {
+      const ra = PLAN_KIND_ORDER[unitKind(a)];
+      const rb = PLAN_KIND_ORDER[unitKind(b)];
+      if (ra !== rb) return ra - rb;
+      return b.credits - a.credits || a.name.localeCompare(b.name, 'zh');
+    });
   }
 
   function renderStats() {
