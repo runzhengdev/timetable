@@ -43,6 +43,7 @@
       <div class="seg track-switch" id="trackSwitch" role="group" aria-label="课表轨道">
         <button type="button" data-track="main" class="active" aria-pressed="true">主课表</button>
         <button type="button" data-track="zsb" aria-pressed="false">助学班</button>
+        <button type="button" data-track="theory" aria-pressed="false">理论课表</button>
       </div>
 
       <div class="week-controls" id="weekControls">
@@ -63,6 +64,11 @@
         <select id="weekSelect" class="select" title="跳转到指定周"></select>
         <button class="btn ghost" id="btnThisWeek">回到本周</button>
         <button class="btn primary edit-only" id="btnAddCourse">+ 新增课程</button>
+      </div>
+
+      <div class="week-label theory-label" id="theoryLabel">
+        <strong>理论课表</strong>
+        <span>教务导出 · 整学期一览</span>
       </div>
 
       <div class="week-label zsb-label" id="zsbLabel">
@@ -127,7 +133,33 @@
           <tbody id="zsbBody"></tbody>
         </table>
       </div>
+
       <p class="hint zsb-note">共 8 个上课日；10-25、11-01、11-08 三个周日因军训停课，不在表内。</p>
+    </div>
+
+    <div class="card table-card theory-panel" id="theoryPanel">
+      <div class="legend-bar">
+        <span class="legend-item"><i class="legend-dot" data-kind="core"></i>专业课</span>
+        <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>次要</span>
+        <span class="legend-item"><i class="legend-dot" data-kind="light"></i>常规 / 水课</span>
+        <span class="legend-hint">教务导出的理论安排：谁教、在哪、第几周上；与「主课表」的逐周实际分开看</span>
+      </div>
+      <div class="table-scroll">
+        <table class="datatable responsive theory-table">
+          <thead>
+            <tr>
+              <th>课程</th>
+              <th>任课教师</th>
+              <th>地点</th>
+              <th>星期 · 节次</th>
+              <th>周次</th>
+              <th class="num">周数</th>
+            </tr>
+          </thead>
+          <tbody id="theoryBody"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="theoryNote"></p>
     </div>
   </section>
 

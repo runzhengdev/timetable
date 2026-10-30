@@ -328,6 +328,16 @@ body.readonly .edit-only { display: none !important; }
 .track-switch { flex: none; }
 .zsb-label { display: none; }
 .weekbar.is-zsb .week-controls { display: none; }
+.weekbar.is-theory .week-controls { display: none; }
+.weekbar .theory-label { display: none; }
+.weekbar.is-theory .theory-label { display: flex; }
+.theory-panel { display: none; }
+#view-schedule.track-theory #mainLayout { display: none; }
+#view-schedule.track-theory .theory-panel { display: block; }
+.theory-table { min-width: 720px; }
+.theory-table td { font-size: 13px; }
+.theory-table td[data-label="周次"] { font-variant-numeric: tabular-nums; color: var(--text-2); }
+.theory-table .course-dot { margin-right: 6px; }
 .weekbar.is-zsb .zsb-label { display: flex; }
 
 /* ---------------- 助学班（日期列） ---------------- */

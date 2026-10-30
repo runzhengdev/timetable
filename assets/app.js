@@ -85,6 +85,42 @@
     20: '学期末，校历标注无课'
   };
 
+  /* 教务导出的理论课表（独立轨道）：整学期一览，与逐周实际课表分开 */
+  const THEORY = {
+    source: '教务「学生个人课表」导出 · 2026-2027 第 1 学期',
+    units: [
+    { name: "金融科技基础", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2], weeks: [4, 7, 8, 11, 12, 13, 14, 15, 16, 17] },
+    { name: "思想道德与法治", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4], weeks: [4, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教A204", day: 1, periods: [6, 7], weeks: [4, 7, 8] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7], weeks: [14, 15, 16, 17, 18] },
+    { name: "国家安全教育", teacher: "杜琰豪", room: "教B401", day: 1, periods: [10, 11, 12, 13], weeks: [11, 12, 13, 14] },
+    { name: "思想道德与法治", teacher: "黄亚丽", room: "教B403", day: 1, periods: [10, 11], weeks: [17] },
+    { name: "思想道德与法治", teacher: "黄亚丽", room: "教B401", day: 1, periods: [10, 11], weeks: [18] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教B401", day: 2, periods: [1, 2], weeks: [4, 7, 8] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教A204", day: 2, periods: [1, 2], weeks: [14] },
+    { name: "金融基础", teacher: "薛宇辰", room: "教B302", day: 2, periods: [1, 2], weeks: [15, 16, 17] },
+    { name: "思想道德与法治", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4], weeks: [6] },
+    { name: "思想道德与法治", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4], weeks: [4, 7, 8, 11, 12, 13, 14, 15, 16, 17] },
+    { name: "金融基础", teacher: "薛宇辰", room: "教B301", day: 2, periods: [3, 4, 5], weeks: [18] },
+    { name: "金融科技基础", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7], weeks: [4, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教B209", day: 2, periods: [8, 9], weeks: [17] },
+    { name: "金融科技基础", teacher: "李小杭", room: "教B209", day: 2, periods: [8, 9], weeks: [18] },
+    { name: "大学生职业生涯与规划", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2], weeks: [11, 12, 13, 14, 15, 16, 17, 18] },
+    { name: "会计基础", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5], weeks: [3, 4, 6, 7] },
+    { name: "会计基础", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5], weeks: [8] },
+    { name: "大学生心理健康教育", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4], weeks: [11, 12, 13, 14, 15, 16, 17, 18] },
+    { name: "习近平经济思想概论", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11], weeks: [13, 14, 15, 16, 17] },
+    { name: "形势与政策Ⅰ", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13], weeks: [11, 12] },
+    { name: "金融基础", teacher: "薛宇辰", room: "教B301", day: 3, periods: [10, 11, 12], weeks: [7] },
+    { name: "大学英语Ⅰ", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2], weeks: [11, 12, 13] },
+    { name: "金融基础", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5], weeks: [3, 4, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18] },
+    { name: "体育Ⅰ", teacher: "陈洪武", room: "旧篮球场", day: 4, periods: [6, 7], weeks: [12] },
+    { name: "习近平经济思想概论", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2], weeks: [3, 6, 7, 8, 11, 12, 13, 14] },
+    { name: "习近平经济思想概论", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2], weeks: [15, 16, 17] },
+    { name: "会计基础", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5], weeks: [3, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17] }
+    ]
+  };
+
   /* 专升本助学班（独立轨道）：每周日 8 节，与主课表互不影响 */
   const ZSB = {
     label: '专升本助学班',
@@ -983,18 +1019,85 @@
   }
 
   function switchTrack(track) {
-    state.track = track === 'zsb' ? 'zsb' : 'main';
+    state.track = (track === 'zsb' || track === 'theory') ? track : 'main';
     const zsb = state.track === 'zsb';
+    const theoryTrack = state.track === 'theory';
     $('#weekbar').classList.toggle('is-zsb', zsb);
+    $('#weekbar').classList.toggle('is-theory', theoryTrack);
     $('#view-schedule').classList.toggle('track-zsb', zsb);
+    $('#view-schedule').classList.toggle('track-theory', theoryTrack);
     $$('#trackSwitch button').forEach(function (b) {
       const on = b.dataset.track === state.track;
       b.classList.toggle('active', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (zsb) renderZsb();
+    if (theoryTrack) {
+      try {
+        renderTheory();
+      } catch (err) {
+        const box = $('#theoryNote');
+        if (box) box.textContent = '理论课表渲染失败：' + (err && err.message ? err.message : err);
+      }
+    }
     if (isNarrow()) window.scrollTo({ top: 0, behavior: 'auto' });
   }
+
+
+
+  /* ==================== 渲染：理论课表（整学期一览） ==================== */
+
+  /* [4,5,6,7,11] -> '4-7,11' */
+  function compactWeeks(weeks) {
+    const arr = weeks.slice().sort(function (a, b) { return a - b; });
+    if (!arr.length) return '—';
+    const out = [];
+    let start = arr[0], prev = arr[0];
+    for (let i = 1; i <= arr.length; i++) {
+      const cur = arr[i];
+      if (cur === prev + 1) { prev = cur; continue; }
+      out.push(start === prev ? String(start) : start + '-' + prev);
+      start = prev = cur;
+    }
+    return out.join(',');
+  }
+
+  const THEORY_DAY = { 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五', 6: '周六', 7: '周日' };
+
+  function renderTheory() {
+    const units = (STATE_THEORY().units || []).slice().sort(function (a, b) {
+      return a.day - b.day || a.periods[0] - b.periods[0] || a.name.localeCompare(b.name, 'zh');
+    });
+
+    $('#theoryBody').innerHTML = units.map(function (u) {
+      const col = unitColor(u);
+      const periods = u.periods.slice().sort(function (a, b) { return a - b; });
+      const label = periods.map(function (p) { return String(p).padStart(2, '0'); }).join('-');
+      const combined = periods.length >= 3;
+      return '<tr>' +
+        '<td data-label="课程"><span class="td-val">' +
+          '<span class="course-dot" data-kind="' + col.kind + '" style="--h:' + col.h + '"></span>' +
+          esc(u.name) + '</span></td>' +
+        '<td data-label="任课教师">' + (u.teacher ? esc(u.teacher) : '<span class="muted">待补充</span>') + '</td>' +
+        '<td data-label="地点">' + esc(u.room || '—') + '</td>' +
+        '<td data-label="星期节次">' + THEORY_DAY[u.day] + ' ' + label + ' 小节' +
+          (combined ? ' · 连堂' : '') + '</td>' +
+        '<td data-label="周次">' + esc(compactWeeks(u.weeks)) + ' 周</td>' +
+        '<td class="num" data-label="周数">' + u.weeks.length + '</td>' +
+        '</tr>';
+    }).join('') || '<tr><td colspan="6" class="muted" style="padding:22px;text-align:center">还没有理论课表数据。</td></tr>';
+
+    const all = STATE_THEORY().units || [];
+    const weeksAll = new Set();
+    all.forEach(function (u) { u.weeks.forEach(function (w) { weeksAll.add(w); }); });
+    const list = Array.from(weeksAll).sort(function (a, b) { return a - b; });
+    const periodsAll = all.reduce(function (s, u) { return s + u.periods.length; }, 0);
+    $('#theoryNote').textContent = '来源：' + STATE_THEORY().source +
+      ' · 共 ' + all.length + ' 个课程单元 · 覆盖第 ' + (list.length ? list[0] + '–' + list[list.length - 1] : '—') +
+      ' 周 · 单元节次合计 ' + periodsAll + ' 小节（不按周累加；体育等实践课不在其中）';
+  }
+
+  function STATE_THEORY() { return typeof THEORY !== 'undefined' ? THEORY : { source: '', units: [] }; }
 
   /* ==================== 渲染：日视图（手机） ==================== */
 
