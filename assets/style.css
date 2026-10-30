@@ -1495,18 +1495,35 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
 .plan-panel { display: none; }
 #view-schedule.track-plan #mainLayout { display: none; }
 #view-schedule.track-plan .plan-panel { display: block; }
-.plan-term { padding: 14px 16px 4px; }
-.plan-term + .plan-term { border-top: 1px solid var(--line); }
-.plan-term-title {
+
+/* ---- 执行计划：折叠面板 ---- */
+.plan-panel .legend-bar .plan-all { margin-left: 10px; padding: 4px 10px; font-size: 12px; }
+.plan-term { border-top: 1px solid var(--line); }
+.plan-term:first-child { border-top: 0; }
+.plan-term > .plan-term-title {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin: 0 0 10px;
-  font-size: 14px;
-  font-weight: 700;
+  padding: 13px 16px;
+  cursor: pointer;
+  list-style: none;
+  transition: background .15s ease;
 }
-.plan-term-no { font-size: 15px; letter-spacing: .2px; }
+.plan-term > .plan-term-title::-webkit-details-marker { display: none; }
+.plan-term > .plan-term-title:hover { background: rgba(127, 127, 127, .07); }
+.plan-caret {
+  width: 0;
+  height: 0;
+  flex: 0 0 auto;
+  border-left: 5px solid var(--text-2);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform .16s ease;
+  transform: rotate(0deg);
+}
+.plan-term[open] > .plan-term-title .plan-caret { transform: rotate(90deg); }
+.plan-term-no { font-size: 15px; font-weight: 700; letter-spacing: .2px; }
 .plan-term-stage {
   font-size: 12px;
   font-weight: 600;
@@ -1515,19 +1532,59 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
   background: var(--chip-bg, rgba(127,127,127,.14));
   color: var(--text-2);
 }
-.plan-term-stat { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-2); }
+.plan-term-stat { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.plan-term .table-scroll { padding: 0 16px 10px; }
+
+/* 分组小标题行 */
+.plan-group-row td {
+  padding: 10px 0 6px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-2);
+  letter-spacing: .3px;
+}
+.plan-group-row .legend-dot { margin-right: 6px; vertical-align: middle; }
+.plan-group-count { margin-left: 6px; font-weight: 600; opacity: .7; }
+
 .plan-table { min-width: 620px; }
 .plan-table td { font-size: 13px; }
 .plan-table td.num { font-variant-numeric: tabular-nums; }
-@media (max-width: 720px) {
-  .plan-term { padding: 12px 12px 2px; }
-  .plan-term-stat { margin-left: 0; width: 100%; }
-}
 
-/* 手机端：执行计划表格卡片化，别让 min-width 把值挤出屏幕 */
 @media (max-width: 720px) {
+  .plan-term > .plan-term-title { padding: 12px; }
+  .plan-term .table-scroll { padding: 0 12px 8px; }
+  .plan-term-stat { margin-left: 0; width: 100%; }
   .plan-table { min-width: 0; }
   .plan-term .table-scroll { overflow: visible; }
-  .plan-term-title { gap: 8px; }
-  .plan-term-no { font-size: 14px; }
+  .plan-group-row td { padding: 12px 0 4px; }
+  .plan-panel .legend-bar { flex-wrap: wrap; row-gap: 6px; }
+  .plan-panel .legend-bar .plan-all { margin-left: 0; }
+}
+
+/* 手机端：执行计划的分组标题行要左对齐一行，别被卡片的 flex 布局拆开 */
+@media (max-width: 720px) {
+  .datatable.responsive .plan-group-row td {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 14px 2px 6px;
+    border: 0;
+    font-size: 12.5px;
+  }
+  .datatable.responsive .plan-group-row td::before { content: none; }
+  .datatable.responsive .plan-group-row .plan-group-count { margin-left: 2px; }
+}
+
+/* 手机端：分组行不要套用「每行一张卡」的样式，避免出现空卡片 */
+@media (max-width: 720px) {
+  .datatable.responsive tbody tr.plan-group-row {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+  }
+  .datatable.responsive tbody tr.plan-group-row:hover { background: transparent; }
 }

@@ -1249,11 +1249,16 @@
     return 'core';
   }
 
+  const PLAN_KIND_ORDER = { core: 0, minor: 1, light: 2 };
+  const PLAN_KIND_LABEL = { core: '主要', minor: '次要', light: '水课' };
+
   function renderPlan() {
     const terms = (typeof PLAN !== 'undefined' && PLAN.terms) ? PLAN.terms : {};
     const order = PLAN_TERM_ORDER.filter(function (k) { return terms[k]; });
+    const openKeys = planOpenSet();
 
     let totalCourses = 0, totalCredits = 0;
+
     const html = order.map(function (key) {
       const group = terms[key];
       const list = group.courses || [];
@@ -1261,42 +1266,98 @@
       totalCourses += list.length;
       totalCredits += credits;
 
-      const head = '<thead><tr>' +
-        '<th>课程</th><th class="num">学分</th><th class="num">学时</th>' +
-        '<th>考核</th><th>性质</th><th>属性</th></tr></thead>';
+      /* 打上类别后按 主要 → 次要 → 水课 排；同档内学分高的在前 */
+      const decorated = list.map(function (c) {
+        return { c: c, kind: planNatureKind(c.nature, c.name) };
+      });
+      decorated.sort(function (a, b) {
+        const d = (PLAN_KIND_ORDER[a.kind] - PLAN_KIND_ORDER[b.kind]);
+        if (d) return d;
+        return (Number(b.c.credits) || 0) - (Number(a.c.credits) || 0);
+      });
 
-      const rows = list.map(function (c) {
-        const kind = planNatureKind(c.nature, c.name);
-        return '<tr>' +
+      /* 分组标题 + 行 */
+      let rows = '';
+      let lastKind = null;
+      let bucket = {};
+      decorated.forEach(function (item) { bucket[item.kind] = (bucket[item.kind] || 0) + 1; });
+
+      decorated.forEach(function (item) {
+        const c = item.c;
+        if (item.kind !== lastKind) {
+          lastKind = item.kind;
+          rows += '<tr class="plan-group-row" data-kind="' + item.kind + '">' +
+            '<td colspan="6">' +
+              '<i class="legend-dot" data-kind="' + item.kind + '"></i>' +
+              PLAN_KIND_LABEL[item.kind] +
+              '<span class="plan-group-count">' + bucket[item.kind] + ' 门</span>' +
+            '</td></tr>';
+        }
+        rows += '<tr>' +
           '<td data-label="课程"><span class="td-val">' +
-            '<span class="course-dot" data-kind="' + kind + '" style="--h:' + planKindHue(kind) + '"></span>' + esc(c.name) +
+            '<span class="course-dot" data-kind="' + item.kind + '" style="--h:' + planKindHue(item.kind) + '"></span>' +
+            esc(c.name) +
           '</span></td>' +
           '<td class="num" data-label="学分">' + (c.credits || 0) + '</td>' +
           '<td class="num" data-label="学时">' + (c.hours || 0) + '</td>' +
           '<td data-label="考核">' + esc(c.exam || '—') + '</td>' +
           '<td data-label="性质">' + esc(c.nature || '—') + '</td>' +
           '<td data-label="属性">' + esc(c.attr || '—') + '</td>' +
-          '</tr>';
-      }).join('');
+        '</tr>';
+      });
 
-      return '<section class="plan-term">' +
-        '<h3 class="plan-term-title">' +
+      const open = openKeys.indexOf(key) !== -1 ? ' open' : '';
+      return '<details class="plan-term" data-term="' + esc(key) + '"' + open + '>' +
+        '<summary class="plan-term-title">' +
+          '<span class="plan-caret" aria-hidden="true"></span>' +
           '<span class="plan-term-no">' + esc(planTermTitle(key)) + '</span>' +
           '<span class="plan-term-stage">' + esc(group.label || '') + '</span>' +
           '<span class="plan-term-stat">' + list.length + ' 门 · ' + Math.round(credits * 10) / 10 + ' 学分</span>' +
-        '</h3>' +
+        '</summary>' +
         '<div class="table-scroll"><table class="datatable responsive plan-table">' +
-          head + '<tbody>' + rows + '</tbody>' +
+          '<thead><tr><th>课程</th><th class="num">学分</th><th class="num">学时</th>' +
+          '<th>考核</th><th>性质</th><th>属性</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
         '</table></div>' +
-        '</section>';
+        '</details>';
     }).join('');
 
     $('#planBody').innerHTML = html ||
       '<p class="muted" style="padding:26px;text-align:center">还没有执行计划数据。</p>';
 
     $('#planNote').textContent = '来源：' + (typeof PLAN !== 'undefined' ? PLAN.source : '') +
-      ' · 共 ' + order.length + ' 个学期 · ' + totalCourses + ' 门课程 · ' +
-      Math.round(totalCredits * 10) / 10 + ' 学分（按培养方案统计）';
+      ' · ' + order.length + ' 个学期 · ' + totalCourses + ' 门 · ' +
+      Math.round(totalCredits * 10) / 10 + ' 学分 · 按「主要 → 次要 → 水课」排序';
+  }
+
+  /* 记住哪些学期是展开的（默认只展开第一个） */
+  function planOpenSet() {
+    try {
+      const raw = safeGet('jwxt.planOpen');
+      if (raw === null || raw === undefined) return [PLAN_TERM_ORDER[0]];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [PLAN_TERM_ORDER[0]];
+    } catch (e) {
+      return [PLAN_TERM_ORDER[0]];
+    }
+  }
+
+  function planSaveOpen() {
+    const open = [];
+    [].forEach.call(document.querySelectorAll('#planBody .plan-term'), function (el) {
+      if (el.open) open.push(el.dataset.term);
+    });
+    try { safeSet('jwxt.planOpen', JSON.stringify(open)); } catch (e) {}
+  }
+
+  /* 展开 / 收起全部 */
+  function planToggleAll(expand) {
+    [].forEach.call(document.querySelectorAll('#planBody .plan-term'), function (el) {
+      el.open = !!expand;
+    });
+    planSaveOpen();
+    const btn = $('#btnPlanAll');
+    if (btn) btn.textContent = expand ? '全部收起' : '全部展开';
   }
 
   function theoryChip(u) {
@@ -2160,6 +2221,16 @@
       if (!window.confirm('把第 ' + from + ' 周的课表复制到第 ' + state.week + ' 周？会覆盖这一周现有内容。')) return;
       if (copyWeek(from, state.week)) toast('已从第 ' + from + ' 周复制', 'ok');
     });
+
+    const planAllBtn = $('#btnPlanAll');
+    if (planAllBtn) {
+      planAllBtn.addEventListener('click', function () {
+        const anyClosed = [].some.call(document.querySelectorAll('#planBody .plan-term'), function (el) { return !el.open; });
+        planToggleAll(anyClosed);
+      });
+    }
+    const planBody = $('#planBody');
+    if (planBody) planBody.addEventListener('toggle', planSaveOpen, true);
 
     $('#trackSwitch').addEventListener('click', function (e) {
       const btn = e.target.closest('button[data-track]');
