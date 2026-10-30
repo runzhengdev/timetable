@@ -114,176 +114,178 @@
     1: [],
     2: [],
     3: [
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B409", day: 3, periods: [3, 4, 5] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     4: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教A204", day: 1, periods: [6, 7] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B409", day: 3, periods: [3, 4, 5] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教A204", day: 1, periods: [6, 7] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B401", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] }
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] }
     ],
     5: [],
     6: [
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B409", day: 3, periods: [3, 4, 5] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     7: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教A204", day: 1, periods: [6, 7] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B409", day: 3, periods: [3, 4, 5] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教A204", day: 1, periods: [6, 7] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B401", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 3, periods: [10, 11, 12] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B301", day: 3, periods: [10, 11, 12] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     8: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教A204", day: 1, periods: [6, 7] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B409", day: 3, periods: [3, 4, 5] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教A204", day: 1, periods: [6, 7] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B401", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     9: [],
     10: [],
     11: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "杜琰豪", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B110", day: 4, periods: [1, 2] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     12: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "杜琰豪", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B110", day: 4, periods: [1, 2] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "旧篮球场", day: 4, periods: [6, 7] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "陈洪武", room: "旧篮球场", day: 4, periods: [6, 7] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     13: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "杜琰豪", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 3, periods: [10, 11] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B110", day: 4, periods: [1, 2] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     14: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B201", day: 1, periods: [6, 7] },
-      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教A204", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7] },
+      { name: "国家安全教育", credits: 1, attr: "必修", teacher: "杜琰豪", room: "教B401", day: 1, periods: [10, 11, 12, 13] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教A204", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 3, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     15: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B201", day: 1, periods: [6, 7] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B302", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B302", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 3, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     16: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B201", day: 1, periods: [6, 7] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B302", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [6, 7] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B302", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
       { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 3, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     17: [
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B201", day: 1, periods: [6, 7] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 1, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B302", day: 2, periods: [1, 2] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B403", day: 2, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B209", day: 2, periods: [8, 9] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 3, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] },
-      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "", room: "实C305", day: 5, periods: [1, 2] },
-      { name: "会计基础", credits: 3, attr: "必修", teacher: "", room: "教B303", day: 5, periods: [3, 4, 5] }
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B401", day: 1, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 1, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B302", day: 2, periods: [1, 2] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B403", day: 2, periods: [3, 4] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B209", day: 2, periods: [8, 9] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
+      { name: "习近平经济思想概论", credits: 2, attr: "必修", teacher: "吴红宇", room: "实C305", day: 5, periods: [1, 2] },
+      { name: "会计基础", credits: 3, attr: "必修", teacher: "徐宏菲", room: "教B303", day: 5, periods: [3, 4, 5] }
     ],
     18: [
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [3, 4] },
-      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "", room: "教B201", day: 1, periods: [6, 7] },
-      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "", room: "教B401", day: 1, periods: [10, 11] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B301", day: 2, periods: [3, 4, 5] },
-      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "", room: "教B209", day: 2, periods: [8, 9] },
-      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [1, 2] },
-      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "", room: "教B403", day: 3, periods: [3, 4] },
-      { name: "金融基础", credits: 3, attr: "必修", teacher: "", room: "教B509", day: 4, periods: [3, 4, 5] }
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [3, 4] },
+      { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B201", day: 1, periods: [6, 7] },
+      { name: "思想道德与法治", credits: 3, attr: "必修", teacher: "黄亚丽", room: "教B401", day: 1, periods: [10, 11] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B301", day: 2, periods: [3, 4, 5] },
+      { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B209", day: 2, periods: [8, 9] },
+      { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
+      { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] }
     ],
     19: [],
     20: []
@@ -1660,19 +1662,21 @@
         const data = JSON.parse(String(reader.result));
         let schedule = null;
 
-        // 新版：多学期
+        // 新版：多学期（按学期合并，不会覆盖没导入的学期）
         if (data && data.terms && typeof data.terms === 'object' && Object.keys(data.terms).length) {
           const terms = {};
           Object.keys(data.terms).forEach(function (k) { terms[k] = normalizeTerm(k, data.terms[k]); });
-          state.terms = terms;
-          state.activeTerm = terms[data.activeTerm] ? data.activeTerm : Object.keys(terms)[0];
+          const keys = Object.keys(terms);
+          keys.forEach(function (k) { state.terms[k] = terms[k]; });
+          state.activeTerm = state.terms[data.activeTerm] ? data.activeTerm : keys[0];
           loadTermInto(state.activeTerm);
+          persistTerms();
           buildTermSelect();
           state.week = defaultWeek();
           buildFormOptions();
           renderAll();
           renderSettings();
-          toast('导入成功：' + Object.keys(terms).length + ' 个学期', 'ok');
+          toast('导入成功：' + keys.map(function (k) { return terms[k].label; }).join('、'), 'ok');
           return;
         }
 
