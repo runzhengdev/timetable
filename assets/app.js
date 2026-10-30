@@ -495,6 +495,19 @@
   const KIND_BASE_HUE = { core: 42, minor: 212, light: 148 };
   const KIND_SPREAD = { core: 4, minor: 7, light: 9 };
 
+  /* 手动指定课程类别（优先于关键词推断）：core=专业主课 / minor=次要 / light=常规水课 */
+  const KIND_OVERRIDES = {
+    // 主要
+    '经济数学': 'core',
+    '信息技术及人工智能应用': 'core',
+    // 次要
+    '大数据技术应用基础': 'minor',
+    '毛泽东思想和中国特色社会主义理论体系概论': 'minor',
+    // 水课
+    '习近平经济思想概论': 'light',
+    '创新能力开发与应用': 'light'
+  };
+
   function guessKind(name) {
     const s = String(name || '');
     if (/英语|日语|俄语|大学外语/.test(s)) return 'minor';           // 次要课
@@ -503,7 +516,11 @@
     return 'light';
   }
 
-  function unitKind(u) { return KINDS.indexOf(u.kind) !== -1 ? u.kind : guessKind(u.name); }
+  function unitKind(u) {
+    if (KINDS.indexOf(u.kind) !== -1) return u.kind;
+    if (Object.prototype.hasOwnProperty.call(KIND_OVERRIDES, u.name)) return KIND_OVERRIDES[u.name];
+    return guessKind(u.name);
+  }
 
   function unitHue(u) {
     const kind = unitKind(u);
@@ -1223,7 +1240,9 @@
     return 42;
   }
 
-  function planNatureKind(nature) {
+  function planNatureKind(nature, name) {
+    if (name && Object.prototype.hasOwnProperty.call(KIND_OVERRIDES, name)) return KIND_OVERRIDES[name];
+    if (name && /英语|日语|俄语|大学外语/.test(name)) return 'minor';
     if (nature === '公共课') return 'light';
     if (nature === '特色课程') return 'minor';
     if (nature === '毕业设计课题') return 'core';
@@ -1247,7 +1266,7 @@
         '<th>考核</th><th>性质</th><th>属性</th></tr></thead>';
 
       const rows = list.map(function (c) {
-        const kind = planNatureKind(c.nature);
+        const kind = planNatureKind(c.nature, c.name);
         return '<tr>' +
           '<td data-label="课程"><span class="td-val">' +
             '<span class="course-dot" data-kind="' + kind + '" style="--h:' + planKindHue(kind) + '"></span>' + esc(c.name) +
