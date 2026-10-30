@@ -1217,6 +1217,12 @@
     return key;
   }
 
+  function planKindHue(kind) {
+    if (kind === 'minor') return 212;
+    if (kind === 'light') return 148;
+    return 42;
+  }
+
   function planNatureKind(nature) {
     if (nature === '公共课') return 'light';
     if (nature === '特色课程') return 'minor';
@@ -1244,7 +1250,7 @@
         const kind = planNatureKind(c.nature);
         return '<tr>' +
           '<td data-label="课程"><span class="td-val">' +
-            '<span class="course-dot" data-kind="' + kind + '"></span>' + esc(c.name) +
+            '<span class="course-dot" data-kind="' + kind + '" style="--h:' + planKindHue(kind) + '"></span>' + esc(c.name) +
           '</span></td>' +
           '<td class="num" data-label="学分">' + (c.credits || 0) + '</td>' +
           '<td class="num" data-label="学时">' + (c.hours || 0) + '</td>' +
