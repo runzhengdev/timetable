@@ -230,7 +230,6 @@
   const ZSB_BY_TERM = {
     '2026S1': {
     label: '专升本助学班',
-    note: '共 8 个上课日；10-25、11-01、11-08 三个周日因军训停课，不在表内。',
     className: '26 秋插本 1 班',
     periods: [
       { no: 1, time: '09:00-09:45' },
@@ -1143,8 +1142,6 @@
       $('#zsbHead').innerHTML = '';
       $('#zsbBody').innerHTML = '<tr><td class="muted" style="padding:26px;text-align:center">' +
         '这个学期还没有助学班安排。</td></tr>';
-      const note = $('.zsb-note');
-      if (note) note.textContent = '该学期未录入助学班数据（目前只有 2026 级 · 第 1 学期有）。';
       return;
     }
     const wd = '日一二三四五六';
@@ -1176,8 +1173,6 @@
       body += '</tr>';
     });
     $('#zsbBody').innerHTML = body;
-    const noteEl = $('.zsb-note');
-    if (noteEl) noteEl.textContent = ZSB.note || ('共 ' + ZSB.dates.length + ' 个上课日 · 每周日');
   }
 
   function switchTrack(track) {
