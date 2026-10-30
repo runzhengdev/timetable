@@ -1059,42 +1059,64 @@
       out.push(start === prev ? String(start) : start + '-' + prev);
       start = prev = cur;
     }
-    return out.join(',');
+    return out.join('、');
   }
 
   const THEORY_DAY = { 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五', 6: '周六', 7: '周日' };
 
+  function theoryChip(u) {
+    const col = unitColor(u);
+    const weeks = compactWeeks(u.weeks);
+    return '<div class="chip theory-chip" data-kind="' + col.kind + '" style="--h:' + col.h + '">' +
+      '<div class="chip-name">' + esc(u.name) + '</div>' +
+      '<div class="chip-teacher">' + (u.teacher ? esc(u.teacher) : '待补充') + '</div>' +
+      '<div class="chip-weeks">第 ' + esc(weeks) + ' 周' +
+        '<span class="chip-wk-count">（' + u.weeks.length + ' 周）</span></div>' +
+      '<div class="chip-room">' + esc(u.room || '地点待定') + '</div>' +
+      '</div>';
+  }
+
   function renderTheory() {
-    const units = (STATE_THEORY().units || []).slice().sort(function (a, b) {
-      return a.day - b.day || a.periods[0] - b.periods[0] || a.name.localeCompare(b.name, 'zh');
+    const units = (STATE_THEORY().units || []).slice();
+
+    let head = '<tr><th class="block-cell">周 / 节次</th>';
+    DAYS.forEach(function (d) { head += '<th>' + DAY_NAMES[d] + '</th>'; });
+    head += '</tr>';
+    $('#theoryHead').innerHTML = head;
+
+    const byDay = {};
+    DAYS.forEach(function (d) { byDay[d] = []; });
+    units.forEach(function (u) { (byDay[u.day] = byDay[u.day] || []).push(u); });
+
+    const plans = {};
+    DAYS.forEach(function (d) { plans[d] = cellPlan(byDay[d]); });
+
+    let body = '';
+    BLOCKS.forEach(function (b, bi) {
+      body += '<tr><th class="block-cell">' +
+        '<span class="blk-name">' + b.no + '</span>' +
+        '<span class="blk-no">' + b.periods.map(pad).join(',') + ' 小节</span>' +
+        '<span class="blk-time">' + b.time + '</span>' +
+        '</th>';
+      DAYS.forEach(function (d) {
+        const cell = plans[d][bi];
+        if (cell.type === 'skip') return;
+        if (cell.type === 'empty') { body += '<td class="slot"></td>'; return; }
+        body += '<td class="slot"' + (cell.rowspan > 1 ? ' rowspan="' + cell.rowspan + '"' : '') + '>' +
+          cell.courses.map(theoryChip).join('') + '</td>';
+      });
+      body += '</tr>';
     });
+    $('#theoryBody').innerHTML = body;
 
-    $('#theoryBody').innerHTML = units.map(function (u) {
-      const col = unitColor(u);
-      const periods = u.periods.slice().sort(function (a, b) { return a - b; });
-      const label = periods.map(function (p) { return String(p).padStart(2, '0'); }).join('-');
-      const combined = periods.length >= 3;
-      return '<tr>' +
-        '<td data-label="课程"><span class="td-val">' +
-          '<span class="course-dot" data-kind="' + col.kind + '" style="--h:' + col.h + '"></span>' +
-          esc(u.name) + '</span></td>' +
-        '<td data-label="任课教师">' + (u.teacher ? esc(u.teacher) : '<span class="muted">待补充</span>') + '</td>' +
-        '<td data-label="地点">' + esc(u.room || '—') + '</td>' +
-        '<td data-label="星期节次">' + THEORY_DAY[u.day] + ' ' + label + ' 小节' +
-          (combined ? ' · 连堂' : '') + '</td>' +
-        '<td data-label="周次">' + esc(compactWeeks(u.weeks)) + ' 周</td>' +
-        '<td class="num" data-label="周数">' + u.weeks.length + '</td>' +
-        '</tr>';
-    }).join('') || '<tr><td colspan="6" class="muted" style="padding:22px;text-align:center">还没有理论课表数据。</td></tr>';
-
-    const all = STATE_THEORY().units || [];
     const weeksAll = new Set();
-    all.forEach(function (u) { u.weeks.forEach(function (w) { weeksAll.add(w); }); });
+    units.forEach(function (u) { u.weeks.forEach(function (w) { weeksAll.add(w); }); });
     const list = Array.from(weeksAll).sort(function (a, b) { return a - b; });
-    const periodsAll = all.reduce(function (s, u) { return s + u.periods.length; }, 0);
+    const periodsAll = units.reduce(function (s2, u) { return s2 + u.periods.length; }, 0);
     $('#theoryNote').textContent = '来源：' + STATE_THEORY().source +
-      ' · 共 ' + all.length + ' 个课程单元 · 覆盖第 ' + (list.length ? list[0] + '–' + list[list.length - 1] : '—') +
-      ' 周 · 单元节次合计 ' + periodsAll + ' 小节（不按周累加；体育等实践课不在其中）';
+      ' · 共 ' + units.length + ' 个课程单元 · 覆盖第 ' +
+      (list.length ? list[0] + '–' + list[list.length - 1] : '—') + ' 周' +
+      ' · 单元节次合计 ' + periodsAll + ' 小节（不按周累加；体育等实践课不在其中）';
   }
 
   function STATE_THEORY() { return typeof THEORY !== 'undefined' ? THEORY : { source: '', units: [] }; }

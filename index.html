@@ -142,20 +142,11 @@
         <span class="legend-item"><i class="legend-dot" data-kind="core"></i>专业课</span>
         <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>次要</span>
         <span class="legend-item"><i class="legend-dot" data-kind="light"></i>常规 / 水课</span>
-        <span class="legend-hint">教务导出的理论安排：谁教、在哪、第几周上；与「主课表」的逐周实际分开看</span>
+        <span class="legend-hint">整学期理论安排：格子里直接写「周几第几节 · 哪几周上 · 谁教 · 在哪」</span>
       </div>
       <div class="table-scroll">
-        <table class="datatable responsive theory-table">
-          <thead>
-            <tr>
-              <th>课程</th>
-              <th>任课教师</th>
-              <th>地点</th>
-              <th>星期 · 节次</th>
-              <th>周次</th>
-              <th class="num">周数</th>
-            </tr>
-          </thead>
+        <table class="timetable theory-table" id="theoryTable">
+          <thead id="theoryHead"></thead>
           <tbody id="theoryBody"></tbody>
         </table>
       </div>
