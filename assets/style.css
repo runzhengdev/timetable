@@ -1592,3 +1592,17 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
 /* 说明文字为空时不留空白 */
 #planNote:empty,
 #theoryNote:empty { display: none; }
+
+/* ---- 主课表：一屏看完 ---- */
+.timetable td.slot { height: 54px; }
+.timetable tr.row-empty td.slot,
+.timetable tr.row-empty th.block-cell { height: 38px; }
+.timetable tr.row-empty .block-cell .blk-time { opacity: .55; }
+.chip { min-height: 44px; padding: 6px 8px 6px 10px; gap: 0; }
+.chip-name { font-size: 12px; line-height: 1.25; }
+.chip-meta { font-size: 10.5px; opacity: .72; line-height: 1.3; }
+.timetable thead th { padding: 7px 6px; font-size: 12px; }
+.timetable thead th .th-date { font-size: 10.5px; }
+.timetable th.block-cell { padding: 6px 4px; }
+.block-cell .blk-name { font-size: 12px; }
+.block-cell .blk-no, .block-cell .blk-time { font-size: 10px; }

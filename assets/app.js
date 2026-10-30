@@ -1045,8 +1045,7 @@
     return '<div class="chip" data-id="' + esc(c.id) + '" data-kind="' + col.kind + '" style="--h:' + col.h + '" title="' +
       esc(c.name + ' · ' + DAY_NAMES[c.day] + ' ' + periodText(c) + ' 节 · ' + roomText(c)) + '">' +
       '<div class="chip-name">' + esc(c.name) + '</div>' +
-      '<div class="chip-meta">' + esc(roomText(c)) + '</div>' +
-      '<div class="chip-time">' + esc(timeText(c)) + (isCombined(c) ? ' · 连堂' : '') + '</div>' +
+      '<div class="chip-meta">' + esc(roomText(c)) + (isCombined(c) ? ' · 连堂' : '') + '</div>' +
       '</div>';
   }
 
@@ -1079,7 +1078,11 @@
 
     let body = '';
     BLOCKS.forEach(function (b, bi) {
-      body += '<tr><th class="block-cell">' +
+      const rowEmpty = DAYS.every(function (d) {
+        const cell = plans[d][bi];
+        return cell.type === 'empty' || cell.type === 'skip';
+      });
+      body += '<tr' + (rowEmpty ? ' class="row-empty"' : '') + '><th class="block-cell">' +
         '<span class="blk-name">' + b.no + '</span>' +
         '<span class="blk-no">' + b.periods.map(pad).join(',') + ' 小节</span>' +
         '<span class="blk-time">' + b.time + '</span>' +
