@@ -124,6 +124,104 @@
   };
 
   /* 专升本助学班（独立轨道）：每周日 8 节，与主课表互不影响 */
+  /* 教务「执行计划」（培养方案）：2026 级三年六个学期各开哪些课 */
+  const PLAN = {
+    source: "教务「执行计划」（培养方案）导出",
+    terms: {
+    '2026-2027-1': {
+      label: "大一上",
+      courses: [
+      { no: "180313001", name: "会计基础", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业基础课", attr: "必修", graded: "是" },
+      { no: "18090005", name: "形势与政策Ⅰ", dept: "马克思主义学院", credits: 0.2, hours: 8, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "190344004", name: "金融基础", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业基础课", attr: "必修", graded: "是" },
+      { no: "19100001", name: "大学英语Ⅰ", dept: "基础部", credits: 3, hours: 48, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100005", name: "体育Ⅰ", dept: "基础部", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "220901001", name: "思想道德与法治", dept: "马克思主义学院", credits: 3, hours: 48, exam: "考试", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "221301001", name: "军事技能", dept: "保卫处（人民武装部）", credits: 2, hours: 112, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "221301002", name: "军事理论", dept: "保卫处（人民武装部）", credits: 2, hours: 36, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "221301003", name: "国家安全教育", dept: "马克思主义学院", credits: 1, hours: 16, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "230303003", name: "金融科技基础", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业基础课", attr: "必修", graded: "是" },
+      { no: "230375001", name: "金融市场", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "241101004", name: "大学生心理健康教育", dept: "学生工作处", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "250353011", name: "金融企业会计", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "260004001", name: "大学生美育", dept: "艺术与设计学院", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "公选", graded: "是" },
+      { no: "260303001", name: "习近平经济思想概论", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "专业基础课", attr: "必修", graded: "是" },
+      { no: "261101001", name: "大学生职业生涯与规划", dept: "招生就业处", credits: 1, hours: 16, exam: "考查", nature: "公共课", attr: "必修", graded: "是" }
+      ]
+    },
+    '2026-2027-2': {
+      label: "大一下",
+      courses: [
+      { no: "18090006", name: "形势与政策Ⅱ", dept: "马克思主义学院", credits: 0.2, hours: 8, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100002", name: "大学英语Ⅱ", dept: "基础部", credits: 3, hours: 48, exam: "考试", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100006", name: "体育Ⅱ", dept: "基础部", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "201201002", name: "劳动教育", dept: "学生工作处", credits: 1, hours: 16, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "213105012", name: "经济数学", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "220003028", name: "大数据技术应用基础", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "专业基础课", attr: "必修", graded: "是" },
+      { no: "220003031", name: "经济学基础", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "220005012", name: "金融资产评估", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "220301001", name: "创新能力开发与应用", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "250175001", name: "金融数据统计", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "250701001", name: "信息技术及人工智能应用", dept: "计算机学院", credits: 5, hours: 80, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "250901001", name: "走在前列的广东实践", dept: "马克思主义学院", credits: 1, hours: 16, exam: "考查", nature: "公共课", attr: "必修", graded: "是" }
+      ]
+    },
+    '2027-2028-1': {
+      label: "大二上",
+      courses: [
+      { no: "180335001", name: "个人理财", dept: "财经学院", credits: 4, hours: 64, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "18090007", name: "形势与政策Ⅲ", dept: "马克思主义学院", credits: 0.2, hours: 8, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100003", name: "大学英语Ⅲ", dept: "基础部", credits: 3, hours: 48, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100007", name: "体育Ⅲ", dept: "基础部", credits: 1.5, hours: 24, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "202573001", name: "金融科技营销", dept: "财经学院", credits: 4, hours: 64, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "210313001", name: "大数据金融", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "210901001", name: "毛泽东思想和中国特色社会主义理论体系概论", dept: "马克思主义学院", credits: 2, hours: 32, exam: "考试", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "220313002", name: "证券投资实务", dept: "财经学院", credits: 4, hours: 64, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "220335002", name: "金融风险管理", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "231101003", name: "创业实务", dept: "招生就业处", credits: 2, hours: 32, exam: "考查", nature: "公共课", attr: "必修", graded: "是" }
+      ]
+    },
+    '2027-2028-2': {
+      label: "大二下",
+      courses: [
+      { no: "180314008", name: "保险基础与实务", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "18090008", name: "形势与政策Ⅳ", dept: "马克思主义学院", credits: 0.2, hours: 8, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100004", name: "大学英语Ⅳ", dept: "基础部", credits: 3, hours: 48, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "19100008", name: "体育Ⅳ", dept: "基础部", credits: 1.5, hours: 24, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "202573002", name: "金融科技用户运营", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "202573004", name: "金融科技应用实训", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "210901002", name: "习近平新时代中国特色社会主义思想概论", dept: "马克思主义学院", credits: 3, hours: 48, exam: "考试", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "213105017", name: "区块链金融", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "220334001", name: "企业管理", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "220363006", name: "财务大数据分析", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "230304001", name: "商务礼仪与沟通", dept: "财经学院", credits: 2, hours: 32, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "230313007", name: "外汇交易实务", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "230373001", name: "大数据量化投资", dept: "财经学院", credits: 3, hours: 48, exam: "考试", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "T40005", name: "特色课程", dept: "学生工作处", credits: 3, hours: 90, exam: "考查", nature: "特色课程", attr: "公选", graded: "是" }
+      ]
+    },
+    '2028-2029-1': {
+      label: "大三上",
+      courses: [
+      { no: "18090009", name: "形势与政策Ⅴ", dept: "马克思主义学院", credits: 0.2, hours: 8, exam: "考查", nature: "公共课", attr: "必修", graded: "是" },
+      { no: "202573003", name: "金融科技产品设计", dept: "财经学院", credits: 4, hours: 64, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "213049002", name: "毕业设计（论文）", dept: "财经学院", credits: 4, hours: 120, exam: "考查", nature: "毕业设计课题", attr: "必修", graded: "是" },
+      { no: "220005020", name: "企业战略与风险管理", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "220005024", name: "金融创新创业实务", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "选修", graded: "是" },
+      { no: "220303001", name: "岗课赛证一体化实训", dept: "财经学院", credits: 2, hours: 60, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "230373004", name: "金融科技合规实务", dept: "财经学院", credits: 3, hours: 48, exam: "考查", nature: "专业课", attr: "必修", graded: "是" },
+      { no: "261101002", name: "就业指导", dept: "招生就业处", credits: 1, hours: 16, exam: "考查", nature: "公共课", attr: "必修", graded: "是" }
+      ]
+    },
+    '2028-2029-2': {
+      label: "大三下",
+      courses: [
+      { no: "220303002", name: "岗位实习", dept: "财经学院", credits: 13, hours: 390, exam: "考查", nature: "专业课", attr: "必修", graded: "是" }
+      ]
+    }
+    }
+  };
+
   /* 专升本助学班，按学期存放（每个学期各自的班级与上课日） */
   const ZSB_BY_TERM = {
     '2026S1': {
@@ -1040,13 +1138,16 @@
   }
 
   function switchTrack(track) {
-    state.track = (track === 'zsb' || track === 'theory') ? track : 'main';
+    state.track = (track === 'zsb' || track === 'theory' || track === 'plan') ? track : 'main';
     const zsb = state.track === 'zsb';
     const theoryTrack = state.track === 'theory';
     $('#weekbar').classList.toggle('is-zsb', zsb);
     $('#weekbar').classList.toggle('is-theory', theoryTrack);
     $('#view-schedule').classList.toggle('track-zsb', zsb);
     $('#view-schedule').classList.toggle('track-theory', theoryTrack);
+    const planTrack = state.track === 'plan';
+    $('#weekbar').classList.toggle('is-plan', planTrack);
+    $('#view-schedule').classList.toggle('track-plan', planTrack);
     $$('#trackSwitch button').forEach(function (b) {
       const on = b.dataset.track === state.track;
       b.classList.toggle('active', on);
@@ -1068,6 +1169,14 @@
       } catch (err) {
         const box = $('#theoryNote');
         if (box) box.textContent = '理论课表渲染失败：' + (err && err.message ? err.message : err);
+      }
+    }
+    if (planTrack) {
+      try {
+        renderPlan();
+      } catch (err2) {
+        const box2 = $('#planNote');
+        if (box2) box2.textContent = '执行计划渲染失败：' + (err2 && err2.message ? err2.message : err2);
       }
     }
     if (isNarrow()) window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1093,6 +1202,77 @@
   }
 
   const THEORY_DAY = { 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五', 6: '周六', 7: '周日' };
+
+  /* ==================== 渲染：执行计划（培养方案 6 个学期） ==================== */
+
+  const PLAN_TERM_ORDER = [
+    '2026-2027-1', '2026-2027-2',
+    '2027-2028-1', '2027-2028-2',
+    '2028-2029-1', '2028-2029-2'
+  ];
+
+  function planTermTitle(key) {
+    const parts = String(key).split('-');
+    if (parts.length === 3) return parts[0] + '-' + parts[1] + ' 第 ' + parts[2] + ' 学期';
+    return key;
+  }
+
+  function planNatureKind(nature) {
+    if (nature === '公共课') return 'light';
+    if (nature === '特色课程') return 'minor';
+    if (nature === '毕业设计课题') return 'core';
+    return 'core';
+  }
+
+  function renderPlan() {
+    const terms = (typeof PLAN !== 'undefined' && PLAN.terms) ? PLAN.terms : {};
+    const order = PLAN_TERM_ORDER.filter(function (k) { return terms[k]; });
+
+    let totalCourses = 0, totalCredits = 0;
+    const html = order.map(function (key) {
+      const group = terms[key];
+      const list = group.courses || [];
+      const credits = list.reduce(function (s, c) { return s + (Number(c.credits) || 0); }, 0);
+      totalCourses += list.length;
+      totalCredits += credits;
+
+      const head = '<thead><tr>' +
+        '<th>课程</th><th class="num">学分</th><th class="num">学时</th>' +
+        '<th>考核</th><th>性质</th><th>属性</th></tr></thead>';
+
+      const rows = list.map(function (c) {
+        const kind = planNatureKind(c.nature);
+        return '<tr>' +
+          '<td data-label="课程"><span class="td-val">' +
+            '<span class="course-dot" data-kind="' + kind + '"></span>' + esc(c.name) +
+          '</span></td>' +
+          '<td class="num" data-label="学分">' + (c.credits || 0) + '</td>' +
+          '<td class="num" data-label="学时">' + (c.hours || 0) + '</td>' +
+          '<td data-label="考核">' + esc(c.exam || '—') + '</td>' +
+          '<td data-label="性质">' + esc(c.nature || '—') + '</td>' +
+          '<td data-label="属性">' + esc(c.attr || '—') + '</td>' +
+          '</tr>';
+      }).join('');
+
+      return '<section class="plan-term">' +
+        '<h3 class="plan-term-title">' +
+          '<span class="plan-term-no">' + esc(planTermTitle(key)) + '</span>' +
+          '<span class="plan-term-stage">' + esc(group.label || '') + '</span>' +
+          '<span class="plan-term-stat">' + list.length + ' 门 · ' + Math.round(credits * 10) / 10 + ' 学分</span>' +
+        '</h3>' +
+        '<div class="table-scroll"><table class="datatable responsive plan-table">' +
+          head + '<tbody>' + rows + '</tbody>' +
+        '</table></div>' +
+        '</section>';
+    }).join('');
+
+    $('#planBody').innerHTML = html ||
+      '<p class="muted" style="padding:26px;text-align:center">还没有执行计划数据。</p>';
+
+    $('#planNote').textContent = '来源：' + (typeof PLAN !== 'undefined' ? PLAN.source : '') +
+      ' · 共 ' + order.length + ' 个学期 · ' + totalCourses + ' 门课程 · ' +
+      Math.round(totalCredits * 10) / 10 + ' 学分（按培养方案统计）';
+  }
 
   function theoryChip(u) {
     const col = unitColor(u);

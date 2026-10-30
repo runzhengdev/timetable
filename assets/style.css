@@ -1487,3 +1487,47 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
   min-height: 0;
   justify-content: flex-start;
 }
+
+/* ---- 执行计划轨道 ---- */
+.weekbar.is-plan .week-controls { display: none; }
+.weekbar .plan-label { display: none; }
+.weekbar.is-plan .plan-label { display: flex; }
+.plan-panel { display: none; }
+#view-schedule.track-plan #mainLayout { display: none; }
+#view-schedule.track-plan .plan-panel { display: block; }
+.plan-term { padding: 14px 16px 4px; }
+.plan-term + .plan-term { border-top: 1px solid var(--line); }
+.plan-term-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.plan-term-no { font-size: 15px; letter-spacing: .2px; }
+.plan-term-stage {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--chip-bg, rgba(127,127,127,.14));
+  color: var(--text-2);
+}
+.plan-term-stat { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-2); }
+.plan-table { min-width: 620px; }
+.plan-table td { font-size: 13px; }
+.plan-table td.num { font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) {
+  .plan-term { padding: 12px 12px 2px; }
+  .plan-term-stat { margin-left: 0; width: 100%; }
+}
+
+/* 手机端：执行计划表格卡片化，别让 min-width 把值挤出屏幕 */
+@media (max-width: 720px) {
+  .plan-table { min-width: 0; }
+  .plan-term .table-scroll { overflow: visible; }
+  .plan-term-title { gap: 8px; }
+  .plan-term-no { font-size: 14px; }
+}

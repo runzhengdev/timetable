@@ -44,6 +44,7 @@
         <button type="button" data-track="main" class="active" aria-pressed="true">主课表</button>
         <button type="button" data-track="zsb" aria-pressed="false">助学班</button>
         <button type="button" data-track="theory" aria-pressed="false">理论课表</button>
+        <button type="button" data-track="plan" aria-pressed="false">执行计划</button>
       </div>
 
       <div class="week-controls" id="weekControls">
@@ -64,6 +65,11 @@
         <select id="weekSelect" class="select" title="跳转到指定周"></select>
         <button class="btn ghost" id="btnThisWeek">回到本周</button>
         <button class="btn primary edit-only" id="btnAddCourse">+ 新增课程</button>
+      </div>
+
+      <div class="week-label plan-label" id="planLabel">
+        <strong>执行计划</strong>
+        <span>培养方案 · 2026 级三年 6 个学期</span>
       </div>
 
       <div class="week-label theory-label" id="theoryLabel">
@@ -152,6 +158,18 @@
       </div>
       <p class="hint" id="theoryNote"></p>
     </div>
+
+    <div class="card table-card plan-panel" id="planPanel">
+      <div class="legend-bar">
+        <span class="legend-item"><i class="legend-dot" data-kind="core"></i>专业课 / 专业基础课</span>
+        <span class="legend-item"><i class="legend-dot" data-kind="minor"></i>特色课程</span>
+        <span class="legend-item"><i class="legend-dot" data-kind="light"></i>公共课</span>
+        <span class="legend-hint">教务「执行计划」导出：每个学期开哪些课、多少学分与学时</span>
+      </div>
+      <div id="planBody"></div>
+      <p class="hint" id="planNote"></p>
+    </div>
+
   </section>
 
   <!-- ================= 统计分析 ================= -->
