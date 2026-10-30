@@ -1588,3 +1588,7 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
   }
   .datatable.responsive tbody tr.plan-group-row:hover { background: transparent; }
 }
+
+/* 说明文字为空时不留空白 */
+#planNote:empty,
+#theoryNote:empty { display: none; }

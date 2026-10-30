@@ -1351,9 +1351,7 @@
     $('#planBody').innerHTML = html ||
       '<p class="muted" style="padding:26px;text-align:center">还没有执行计划数据。</p>';
 
-    $('#planNote').textContent = '来源：' + (typeof PLAN !== 'undefined' ? PLAN.source : '') +
-      ' · ' + order.length + ' 个学期 · ' + totalCourses + ' 门 · ' +
-      Math.round(totalCredits * 10) / 10 + ' 学分 · 按「主要 → 次要 → 水课」排序';
+    $('#planNote').textContent = '';
   }
 
   /* 记住哪些学期是展开的（默认只展开第一个） */
@@ -1449,10 +1447,7 @@
     units.forEach(function (u) { u.weeks.forEach(function (w) { weeksAll.add(w); }); });
     const list = Array.from(weeksAll).sort(function (a, b) { return a - b; });
     const periodsAll = units.reduce(function (s2, u) { return s2 + u.periods.length; }, 0);
-    $('#theoryNote').textContent = '来源：' + STATE_THEORY().source +
-      ' · 共 ' + units.length + ' 个课程单元 · 覆盖第 ' +
-      (list.length ? list[0] + '–' + list[list.length - 1] : '—') + ' 周' +
-      ' · 单元节次合计 ' + periodsAll + ' 小节（不按周累加；体育等实践课不在其中）';
+    $('#theoryNote').textContent = '';
   }
 
   function termLabel() {
