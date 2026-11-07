@@ -53,6 +53,7 @@
     '大学生职业生涯与规划': '梁广洋',
     '会计基础': '徐宏菲',
     '体育Ⅰ': '陈洪武',
+    '大学生心理健康教育': '林炳橼',
     '习近平经济思想概论': '吴红宇',
     '形势与政策Ⅰ': '邱春明'
   };
@@ -335,7 +336,6 @@
       { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
       { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
       { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
-      { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
       { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
       { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2] },
       { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
@@ -515,7 +515,7 @@
     const s = String(name || '');
     if (/英语|日语|俄语|大学外语/.test(s)) return 'minor';           // 次要课
     if (/体育|思政|思想|道德|法治|形势|政策|军事|心理|职业|就业|安全|概论|修养|美育|劳动|国防|班会/.test(s)) return 'light';
-    if (/金融|会计|证券|投资|保险|统计|财务|编程|数据|Python|Excel|审计|税法/.test(s)) return 'core';
+    if (/金融|会计|证券|投资|保险|统计|财务|编程|数据|Python|Excel|审计|税法|经济/.test(s)) return 'core';
     return 'light';
   }
 
@@ -544,11 +544,21 @@
     for (let i = 0; i < BLOCKS.length; i++) if (BLOCKS[i].periods.indexOf(p) !== -1) return i;
     return p <= 2 ? 0 : BLOCKS.length - 1;
   }
-  function blockOfPeriod(p) { return BLOCKS[blockIndexOfPeriod(p)]; }
   function minPeriod(u) { return Math.min.apply(null, u.periods); }
   function maxPeriod(u) { return Math.max.apply(null, u.periods); }
-  function startTime(u) { return blockOfPeriod(minPeriod(u)).time.split('-')[0]; }
-  function endTime(u) { return blockOfPeriod(maxPeriod(u)).time.split('-')[1]; }
+
+  /* 每小节的精确起止（40 分钟 / 节），避免用整块边界多算下课时间 */
+  const PERIOD_TIME = {
+    1: ['08:30', '09:10'], 2: ['09:10', '09:50'],
+    3: ['10:00', '10:40'], 4: ['10:40', '11:20'],
+    5: ['11:30', '12:10'],
+    6: ['14:00', '14:40'], 7: ['14:40', '15:20'],
+    8: ['15:30', '16:10'], 9: ['16:10', '16:50'],
+    10: ['18:30', '19:10'], 11: ['19:10', '19:50'],
+    12: ['20:00', '20:40'], 13: ['20:40', '21:20']
+  };
+  function startTime(u) { return PERIOD_TIME[minPeriod(u)][0]; }
+  function endTime(u) { return PERIOD_TIME[maxPeriod(u)][1]; }
   function timeText(u) { return startTime(u) + '-' + endTime(u); }
   function periodText(u) {
     return u.periods.slice().sort(function (a, b) { return a - b; })
@@ -571,6 +581,13 @@
   function sortUnits(a, b) {
     if (a.day !== b.day) return a.day - b.day;
     return minPeriod(a) - minPeriod(b);
+  }
+  function isContiguous(periods) {
+    const arr = periods.slice().sort(function (a, b) { return a - b; });
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] - arr[i - 1] !== 1) return false;
+    }
+    return true;
   }
 
   /* ==================== 状态 & 持久化 ==================== */
@@ -981,7 +998,7 @@
     if (!sel) return;
     sel.innerHTML = sortedTerms().map(function (t) {
       const n = Object.keys(t.schedule || {}).length;
-      return '<option value="' + t.key + '">' + t.label + (n ? '' : '（空）') + '</option>';
+      return '<option value="' + esc(t.key) + '">' + esc(t.label) + (n ? '' : '（空）') + '</option>';
     }).join('');
     sel.value = state.activeTerm;
   }
@@ -1027,10 +1044,26 @@
       const s = blockIndexOfPeriod(ps[0]);
       const e = blockIndexOfPeriod(ps[ps.length - 1]);
 
-      if (cells[s].type === 'cell') { cells[s].courses.push(c); return; }
+      if (cells[s].type === 'cell') {
+        cells[s].courses.push(c);
+        const oldEnd = s + cells[s].rowspan - 1;
+        if (e > oldEnd) {
+          cells[s].rowspan = e - s + 1;
+          for (let i = oldEnd + 1; i <= e && i < cells.length; i++) cells[i] = { type: 'skip' };
+        }
+        return;
+      }
       if (cells[s].type === 'skip') {
         for (let i = s - 1; i >= 0; i--) {
-          if (cells[i].type === 'cell') { cells[i].courses.push(c); return; }
+          if (cells[i].type === 'cell') {
+            cells[i].courses.push(c);
+            const oldEnd = i + cells[i].rowspan - 1;
+            if (e > oldEnd) {
+              cells[i].rowspan = e - i + 1;
+              for (let k = oldEnd + 1; k <= e && k < cells.length; k++) cells[k] = { type: 'skip' };
+            }
+            return;
+          }
         }
         return;
       }
@@ -1579,13 +1612,15 @@
     const curMin = now.getHours() * 60 + now.getMinutes();
 
     const cwNow = weekOfDate(now);
-    const todayUnits = weekUnits(cwNow);
-    if (todayUnits) {
-      const todayList = todayUnits.filter(function (c) { return c.day === dayNum(now); });
-      for (let i = 0; i < todayList.length; i++) {
-        const c = todayList[i];
-        if (curMin >= minutesOf(startTime(c)) && curMin < minutesOf(endTime(c))) {
-          return { kind: 'now', course: c, at: now, minutes: minutesOf(endTime(c)) - curMin, week: cwNow };
+    if (cwNow >= 1 && cwNow <= state.settings.totalWeeks) {
+      const todayUnits = weekUnits(cwNow);
+      if (todayUnits) {
+        const todayList = todayUnits.filter(function (c) { return c.day === dayNum(now); }).sort(sortUnits);
+        for (let i = 0; i < todayList.length; i++) {
+          const c = todayList[i];
+          if (curMin >= minutesOf(startTime(c)) && curMin < minutesOf(endTime(c))) {
+            return { kind: 'now', course: c, at: now, minutes: minutesOf(endTime(c)) - curMin, week: cwNow };
+          }
         }
       }
     }
@@ -1640,6 +1675,7 @@
     const units = weekUnits(week);
     const list = units || [];
     const periods = list.reduce(function (s, c) { return s + c.periods.length; }, 0);
+    const sessions = list.reduce(function (s, c) { return s + sessionCount(c); }, 0);
 
     const names = {};
     list.forEach(function (c) { if (!names[c.name]) names[c.name] = c.credits; });
@@ -1664,8 +1700,8 @@
     html += '<div class="kv">' +
       '<div class="kv-row"><span>上课单元</span><span>' + list.length + ' 个</span></div>' +
       '<div class="kv-row"><span>课程门数</span><span>' + Object.keys(names).length + ' 门</span></div>' +
-      '<div class="kv-row"><span>本周小节</span><span>' + periods + ' 小节 / ' + list.length + ' 次课</span></div>' +
-      '<div class="kv-row"><span>本周学时</span><span>' + durationText(periods * 45) + '</span></div>' +
+      '<div class="kv-row"><span>本周小节</span><span>' + periods + ' 小节 / ' + sessions + ' 次课</span></div>' +
+      '<div class="kv-row"><span>本周学时</span><span>' + durationText(periods * 40) + '</span></div>' +
       '<div class="kv-row"><span>本周学分</span><span>' + fmtNum(credits) + '</span></div>' +
       '</div>';
 
@@ -1840,7 +1876,7 @@
         '<td class="num" data-label="出现周数">' + (c.offSchedule ? '—' : c.weekCount) + '</td>' +
         '<td class="num" data-label="最近周小节">' + (c.offSchedule ? '—' : lastPeriods) + '</td>' +
         '</tr>';
-    }).join('') || '<tr><td colspan="6" class="muted" style="padding:22px;text-align:center">暂无课程。</td></tr>';
+    }).join('') || '<tr><td colspan="8" class="muted" style="padding:22px;text-align:center">暂无课程。</td></tr>';
   }
 
   /* ==================== 渲染：设置 ==================== */
@@ -1878,7 +1914,7 @@
         '</div>' +
         (isActive
           ? '<span class="term-now">使用中</span>'
-          : '<button class="btn" data-term="' + t.key + '">切换</button>') +
+          : '<button class="btn" data-term="' + esc(t.key) + '">切换</button>') +
         '</div>';
     }).join('');
   }
@@ -2004,6 +2040,7 @@
 
     if (!name) return { error: '请填写课程名称。' };
     if (!periods.length) return { error: '请至少选择一个节次。' };
+    if (!isContiguous(periods)) return { error: '节次需连续，中间不要空档。' };
 
     return {
       unit: {
@@ -2159,7 +2196,13 @@
           keys.forEach(function (k) { state.terms[k] = terms[k]; });
           state.activeTerm = state.terms[data.activeTerm] ? data.activeTerm : keys[0];
           loadTermInto(state.activeTerm);
-          persistTerms();
+          // terms 不持久化：loadState 每次 buildTermSeed 重建，无需 persistTerms()
+          if (data && data.settings) {
+            if (data.settings.theme === 'light' || data.settings.theme === 'dark') state.settings.theme = data.settings.theme;
+            if (['auto', 'grid', 'day'].indexOf(data.settings.viewMode) !== -1) state.settings.viewMode = data.settings.viewMode;
+          }
+          applyTheme();
+          persistSettings();
           buildTermSelect();
           state.week = defaultWeek();
           buildFormOptions();
@@ -2179,11 +2222,15 @@
         if (!schedule || !Object.keys(schedule).length) throw new Error('格式不对');
 
         state.schedule = schedule;
+        syncTermFromState();
         if (data.settings) {
           if (/^\d{4}-\d{2}-\d{2}$/.test(data.settings.termStart)) state.settings.termStart = data.settings.termStart;
           const tw = Number(data.settings.totalWeeks);
           if (Number.isFinite(tw)) state.settings.totalWeeks = Math.min(30, Math.max(1, Math.round(tw)));
+          if (data.settings.theme === 'light' || data.settings.theme === 'dark') state.settings.theme = data.settings.theme;
+          if (['auto', 'grid', 'day'].indexOf(data.settings.viewMode) !== -1) state.settings.viewMode = data.settings.viewMode;
         }
+        applyTheme();
         persistSettings();
         state.week = defaultWeek();
         renderAll();
