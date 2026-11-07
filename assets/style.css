@@ -12,7 +12,7 @@
   --border-strong: #cfd6e6;
   --text: #1c2333;
   --text-2: #58617a;
-  --muted: #8b93a8;
+  --muted: #6a7490;
   --primary: #3d5afe;
   --primary-soft: #eef1ff;
   --primary-text: #ffffff;
@@ -42,7 +42,7 @@ body[data-theme="dark"] {
   --border-strong: #354055;
   --text: #e8ecf5;
   --text-2: #a7b0c4;
-  --muted: #77809a;
+  --muted: #7f88a2;
   --primary: #6b83ff;
   --primary-soft: #1d2645;
   --primary-text: #0b0f18;
@@ -75,6 +75,14 @@ body {
 h1, h2, h3, p { margin: 0; }
 
 button { font-family: inherit; font-size: inherit; cursor: pointer; }
+
+/* 全局键盘焦点环：键盘导航时任何可聚焦元素都有清晰的 --primary 描边 */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.input:focus-visible,
+.select:focus-visible { outline: none; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -133,7 +141,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   font-weight: 600;
   transition: background .16s, color .16s, box-shadow .16s;
 }
-.tab:hover { color: var(--text); }
+.tab:hover { color: var(--text); background: color-mix(in srgb, var(--surface) 60%, transparent); }
 .tab.active {
   background: var(--surface);
   color: var(--primary);
@@ -165,7 +173,9 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
+  transition: border-color .16s, box-shadow .16s, transform .16s;
 }
+.term-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
 .term-card.active {
   border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
   background: var(--primary-soft);
@@ -196,9 +206,9 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   background: var(--surface);
   color: var(--text-2);
   font-size: 15px;
-  transition: transform .12s, border-color .16s, color .16s;
+  transition: transform .12s, border-color .16s, color .16s, background .16s, box-shadow .16s;
 }
-.icon-btn:hover { transform: translateY(-1px); border-color: var(--border-strong); color: var(--text); }
+.icon-btn:hover { transform: translateY(-1px); border-color: var(--border-strong); color: var(--text); background: var(--surface-2); box-shadow: var(--shadow-sm); }
 
 /* ---------------- 布局 ---------------- */
 
@@ -361,8 +371,8 @@ body.readonly .edit-only { display: none !important; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.theory-chip .chip-teacher { font-size: 10.5px; opacity: .9; line-height: 1.3; margin-top: 1px; }
-.theory-chip .chip-room { font-size: 10.5px; opacity: .7; line-height: 1.3; }
+.theory-chip .chip-teacher { font-size: 10.5px; color: hsl(var(--h) 20% 40%); line-height: 1.3; margin-top: 1px; }
+.theory-chip .chip-room { font-size: 10.5px; color: hsl(var(--h) 16% 46%); line-height: 1.3; }
 .theory-chip .chip-weeks {
   font-size: 10.5px;
   font-weight: 700;
@@ -370,7 +380,10 @@ body.readonly .edit-only { display: none !important; }
   margin-top: 2px;
   font-variant-numeric: tabular-nums;
 }
-.theory-chip .chip-wk-count { opacity: .6; font-weight: 500; }
+.theory-chip .chip-wk-count { color: hsl(var(--h) 14% 48%); font-weight: 500; }
+body[data-theme="dark"] .theory-chip .chip-teacher { color: hsl(var(--h) 24% 68%); }
+body[data-theme="dark"] .theory-chip .chip-room { color: hsl(var(--h) 18% 60%); }
+body[data-theme="dark"] .theory-chip .chip-wk-count { color: hsl(var(--h) 14% 56%); }
 .theory-table td { font-size: 13px; }
 .theory-table td[data-label="周次"] { font-variant-numeric: tabular-nums; color: var(--text-2); }
 .theory-table .course-dot { margin-right: 6px; }
@@ -414,18 +427,24 @@ body.readonly .edit-only { display: none !important; }
   font-size: 13.5px;
   font-weight: 600;
   white-space: nowrap;
-  transition: transform .12s, background .16s, border-color .16s, color .16s;
+  transition: transform .12s, background .16s, border-color .16s, color .16s, box-shadow .16s;
 }
-.btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-.btn:active { transform: none; }
+.btn:hover { border-color: var(--border-strong); transform: translateY(-1px); background: var(--surface-2); box-shadow: var(--shadow-sm); }
+.btn:active { transform: translateY(0); box-shadow: none; }
 .btn.primary {
   background: linear-gradient(140deg, var(--primary), #6a5cff);
   border-color: transparent;
-  color: #fff;
+  color: var(--primary-text);
   box-shadow: 0 4px 14px color-mix(in srgb, var(--primary) 32%, transparent);
 }
-.btn.primary:hover { filter: brightness(1.05); }
+.btn.primary:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 20px color-mix(in srgb, var(--primary) 42%, transparent);
+}
+.btn.primary:active { transform: translateY(0); box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 30%, transparent); }
 .btn.ghost { background: transparent; }
+.btn.ghost:hover { background: var(--surface-2); }
 .btn.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); }
 
 /* ---------------- 课表 ---------------- */
@@ -459,12 +478,12 @@ body.readonly .edit-only { display: none !important; }
   white-space: nowrap;
 }
 .timetable thead th .th-date { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
-.timetable thead th.today-col { color: var(--primary); background: var(--primary-soft); }
+.timetable thead th.today-col { color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 2px 0 var(--primary); }
 .timetable thead th.today-col .th-date { color: var(--primary); }
 
 .timetable th.block-cell {
   width: 96px;
-  background: var(--surface-2);
+  background: var(--surface);
   padding: 8px 4px;
   text-align: center;
   font-size: 12px;
@@ -480,8 +499,11 @@ body.readonly .edit-only { display: none !important; }
   height: 62px;
   padding: 3px;
   vertical-align: stretch;
+  transition: background .15s;
 }
-.timetable td.slot.today-col { background: color-mix(in srgb, var(--primary) 5%, transparent); }
+.timetable td.slot.today-col { background: color-mix(in srgb, var(--primary) 7%, transparent); }
+.timetable td.slot:hover { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
+.timetable td.slot.today-col:hover { background: color-mix(in srgb, var(--primary) 11%, transparent); }
 
 .chip {
   --h: 230;
@@ -499,7 +521,8 @@ body.readonly .edit-only { display: none !important; }
   background: hsl(var(--h) 14% 95% / .86);
   border-left: 3px solid hsl(var(--h) 10% 78%);
   color: hsl(var(--h) 12% 38%);
-  transition: background .16s, filter .16s;
+  box-shadow: var(--shadow-sm);
+  transition: background .16s, filter .16s, box-shadow .16s, transform .16s;
 }
 
 /* —— 扁平配色：专业课金 / 次要课蓝 / 水课绿，只是带一点点透明度 —— */
@@ -540,11 +563,13 @@ body[data-theme="dark"] .chip[data-kind="light"] {
   color: hsl(var(--h) 48% 82%);
 }
 
-.chip:hover { filter: brightness(1.04) saturate(1.04); }
+.chip:hover { filter: brightness(1.04) saturate(1.05); box-shadow: var(--shadow-md); transform: translateY(-1px); }
 
 .chip-name { font-size: 12.5px; font-weight: 700; line-height: 1.25; word-break: break-all; }
-.chip-meta { font-size: 11px; opacity: .85; line-height: 1.3; }
-.chip-time { font-size: 10.5px; opacity: .7; font-variant-numeric: tabular-nums; }
+.chip-meta { font-size: 11px; color: hsl(var(--h) 22% 38%); line-height: 1.3; }
+.chip-time { font-size: 10.5px; color: hsl(var(--h) 16% 44%); font-variant-numeric: tabular-nums; }
+body[data-theme="dark"] .chip-meta { color: hsl(var(--h) 24% 66%); }
+body[data-theme="dark"] .chip-time { color: hsl(var(--h) 18% 58%); }
 
 .empty-week { padding: 46px 20px; text-align: center; }
 .empty-week .empty-icon { font-size: 34px; margin-bottom: 8px; }
@@ -562,7 +587,9 @@ body[data-theme="dark"] .chip[data-kind="light"] {
   border-radius: 10px;
   background: var(--surface-2);
   border: 1px solid var(--border);
+  transition: background .16s, border-color .16s;
 }
+.timeline li:hover { background: var(--surface); border-color: var(--border-strong); }
 .timeline li.now {
   background: var(--primary-soft);
   border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
@@ -635,7 +662,8 @@ body[data-theme="dark"] .chip[data-kind="light"] {
   text-align: left;
   font-size: 12px;
   font-weight: 700;
-  color: var(--text-2);
+  color: var(--muted);
+  letter-spacing: .3px;
   padding: 9px 10px;
   border-bottom: 1px solid var(--border-strong);
   white-space: nowrap;
@@ -648,6 +676,7 @@ body[data-theme="dark"] .chip[data-kind="light"] {
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
+.datatable tbody td { transition: background .14s; }
 .datatable tbody tr:hover td { background: var(--surface-2); }
 .datatable .num { text-align: right; font-variant-numeric: tabular-nums; }
 .datatable .ops { text-align: right; white-space: nowrap; }
@@ -805,9 +834,11 @@ body[data-theme="dark"] .tag.week-even { background: #10241f; border-color: #1e4
   border-radius: var(--radius);
   padding: 15px 16px;
   box-shadow: var(--shadow-sm);
+  transition: transform .16s, box-shadow .16s, border-color .16s;
 }
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
 .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; }
-.stat-value { font-size: 27px; font-weight: 750; line-height: 1.2; margin-top: 4px; letter-spacing: -.5px; }
+.stat-value { font-size: 27px; font-weight: 700; line-height: 1.2; margin-top: 4px; letter-spacing: -.5px; }
 .stat-value small { font-size: 13px; font-weight: 600; color: var(--text-2); margin-left: 3px; }
 .stat-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
 
@@ -838,11 +869,11 @@ body[data-theme="dark"] .tag.week-even { background: #10241f; border-color: #1e4
 
 /* ---------------- 表单 ---------------- */
 
-.form-row { display: grid; gap: 6px; margin-bottom: 14px; }
+.form-row { display: grid; gap: 8px; margin-bottom: 16px; }
 .form-row label { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
-.form-grid > .form-row { margin-bottom: 14px; }
+.form-grid > .form-row { margin-bottom: 16px; }
 
 .period-picker {
   display: grid;
@@ -979,7 +1010,7 @@ body[data-theme="dark"] .detail-hero[data-kind="light"] {
   border-left-color: hsl(var(--h) 34% 48%);
   color: hsl(var(--h) 48% 82%);
 }
-.detail-hero h3 { font-size: 17px; font-weight: 750; }
+.detail-hero h3 { font-size: 17px; font-weight: 700; }
 .detail-hero p { font-size: 12.5px; opacity: .82; margin-top: 2px; }
 
 .detail-list { display: grid; gap: 0; }
@@ -1112,7 +1143,9 @@ body[data-theme="dark"] .detail-hero[data-kind="light"] {
   border-radius: 12px;
   background: var(--surface);
   overflow: hidden;
+  transition: border-color .16s, box-shadow .16s;
 }
+.day-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
 .day-card > header {
   display: flex;
   align-items: center;
@@ -1173,7 +1206,7 @@ body[data-theme="dark"] .day-item { background: hsl(var(--h) 26% 20% / .45); }
 .di-meta { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
 
 /* 日视图里也按类别分轻重：专业课深色加粗，水课降一档 */
-.day-item[data-kind="core"] .di-name { color: hsl(var(--h) 78% 26%); font-weight: 750; }
+.day-item[data-kind="core"] .di-name { color: hsl(var(--h) 78% 26%); font-weight: 700; }
 .day-item[data-kind="minor"] .di-name { color: hsl(var(--h) 60% 30%); }
 .day-item[data-kind="light"] .di-name { color: var(--text-2); font-weight: 600; }
 body[data-theme="dark"] .day-item[data-kind="core"] .di-name { color: hsl(var(--h) 82% 85%); }
@@ -1478,6 +1511,8 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
   .timetable { font-size: 11px; }
   .layout { display: block; }
   .chip { background: #f4f4f4; }
+  /* 日视图下 #tableScroll 会带 hidden 属性；打印时强制显示周网格表，避免日视图打印空白 */
+  #tableScroll { display: block !important; }
   .day-list { display: none !important; }
 }
 
@@ -1600,7 +1635,7 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
 .timetable tr.row-empty .block-cell .blk-time { opacity: .55; }
 .chip { min-height: 44px; padding: 6px 8px 6px 10px; gap: 0; }
 .chip-name { font-size: 12px; line-height: 1.25; }
-.chip-meta { font-size: 10.5px; opacity: .72; line-height: 1.3; }
+.chip-meta { font-size: 10.5px; line-height: 1.3; }
 .timetable thead th { padding: 7px 6px; font-size: 12px; }
 .timetable thead th .th-date { font-size: 10.5px; }
 .timetable th.block-cell { padding: 6px 4px; }
