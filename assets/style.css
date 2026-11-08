@@ -1531,6 +1531,27 @@ body[data-theme="dark"] .day-none.event { color: hsl(84 40% 74%); }
 #view-schedule.track-plan #mainLayout { display: none; }
 #view-schedule.track-plan .plan-panel { display: block; }
 
+/* ---- 网络中心值班轨道 ---- */
+.weekbar .network-label { display: none; }
+.weekbar.is-network .network-label { display: flex; }
+.weekbar.is-network .week-controls { display: none; }
+.network-panel { display: none; }
+#view-schedule.track-network #mainLayout { display: none; }
+#view-schedule.track-network .network-panel { display: block; }
+.network-head { padding: 4px 2px 14px; }
+.network-head h3 { font-size: 17px; font-weight: 700; }
+.network-head p { font-size: 13px; color: var(--text-2); margin-top: 4px; }
+.network-table { min-width: 0; }
+.network-notes { margin-top: 18px; padding: 18px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); }
+.network-notes-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.network-notes-icon { font-size: 16px; line-height: 1; }
+.network-notes h4 { margin: 0; font-size: 15px; font-weight: 700; }
+.network-note-highlights { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
+.network-note-highlights li { padding: 10px 14px; border-radius: 10px; background: var(--primary-soft); border-left: 3px solid var(--primary); font-size: 13px; line-height: 1.5; font-weight: 500; }
+.network-note-rules { counter-reset: rule; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.network-note-rules li { counter-increment: rule; position: relative; padding-left: 32px; font-size: 13px; line-height: 1.55; color: var(--text-2); }
+.network-note-rules li::before { content: counter(rule); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
 /* ---- 执行计划：折叠面板 ---- */
 .plan-panel .legend-bar .plan-all { margin-left: 10px; padding: 4px 10px; font-size: 12px; }
 .plan-term { border-top: 1px solid var(--line); }

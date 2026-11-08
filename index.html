@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236b5cf6'/%3E%3Ctext x='32' y='45' font-size='34' font-family='sans-serif' text-anchor='middle' fill='%23fff'%3E%E8%AF%BE%3C/text%3E%3C/svg%3E">
 <title>我的教务系统 · 课表管理</title>
-<link rel="stylesheet" href="assets/style.css?v=10">
+<link rel="stylesheet" href="assets/style.css?v=12">
 </head>
 <body data-theme="dark">
 
@@ -45,6 +45,7 @@
         <button type="button" data-track="zsb" aria-pressed="false">助学班</button>
         <button type="button" data-track="theory" aria-pressed="false">理论课表</button>
         <button type="button" data-track="plan" aria-pressed="false">执行计划</button>
+        <button type="button" data-track="network" aria-pressed="false">网络中心值班</button>
       </div>
 
       <div class="week-controls" id="weekControls">
@@ -80,6 +81,11 @@
       <div class="week-label zsb-label" id="zsbLabel">
         <strong>专升本助学班</strong>
         <span>26 秋插本 1 班 · 8 个上课日 · 每周日</span>
+      </div>
+
+      <div class="week-label network-label" id="networkLabel">
+        <strong>网络中心值班</strong>
+        <span>第6-7节 · 14:00-15:20 · 公益分 1.5</span>
       </div>
     </div>
 
@@ -163,6 +169,11 @@
       </div>
       <div id="planBody"></div>
       <p class="hint" id="planNote"></p>
+    </div>
+
+    <div class="card table-card network-panel" id="networkPanel">
+      <div id="networkBody"></div>
+      <p class="hint" id="networkNote"></p>
     </div>
 
   </section>
@@ -357,6 +368,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/app.js?v=10"></script>
+<script src="assets/app.js?v=12"></script>
 </body>
 </html>

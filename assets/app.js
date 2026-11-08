@@ -115,6 +115,7 @@
     { name: "会计基础", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5], weeks: [3, 4, 6, 7] },
     { name: "会计基础", teacher: "徐宏菲", room: "教B409", day: 3, periods: [3, 4, 5], weeks: [8] },
     { name: "大学生心理健康教育", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4], weeks: [11, 12, 13, 14, 15, 16, 17, 18] },
+    { name: "体育Ⅰ", teacher: "陈洪武", room: "", day: 3, periods: [8, 9], weeks: [3, 4, 6, 7, 8, 11, 12, 13, 14, 15, 16] },
     { name: "习近平经济思想概论", teacher: "吴红宇", room: "实C305", day: 3, periods: [10, 11], weeks: [13, 14, 15, 16, 17] },
     { name: "形势与政策Ⅰ", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13], weeks: [11, 12] },
     { name: "金融基础", teacher: "薛宇辰", room: "教B301", day: 3, periods: [10, 11, 12], weeks: [7] },
@@ -253,6 +254,33 @@
     }
   };
 
+  /* 网络中心值班（独立轨道）：每周一 / 周三第 6-7 节 */
+  const NETWORK_DUTY = {
+    label: '网络中心值班',
+    period: '第6-7节 · 14:00-15:20',
+    points: 1.5,
+    location: '易班窗口一',
+    duty: [
+      { day: '周一', members: [{ name: '林润铮', me: true }, { name: '陈艺焓' }], leader: '肖洁淳', leaderNote: '' },
+      { day: '周三', members: [{ name: '林润铮', me: true }, { name: '周婕菲' }], leader: '潘悦涛', leaderNote: '副组长' }
+    ],
+    notes: {
+      highlights: [
+        '网络中心的只需要带工作牌，不用穿工作服',
+        '值班记得填值班记录表，有公益分和义劳时长'
+      ],
+      rules: [
+        '窗口一必须有人，其他同学坐会议桌',
+        '要打开窗口 1 的灯和电脑，有学生来访时网管员填来访记录表',
+        '不要穿拖鞋',
+        '值班期间可以携带电脑或书籍，严禁打游戏、睡觉、吃东西、明晃晃玩手机！',
+        '要注意礼节礼貌，易班发展中心平时有老师办公',
+        '上午或下午最后一班同学，提醒下一班同学过来拿钥匙，可能需要去拿钥匙交接',
+        '有事情和值班时间冲突，先找人换班或找人多值一班，实在找不到跟中心助理请假'
+      ]
+    }
+  };
+
   /* 逐周快照种子：来自 UI 目录各周抓取的课表；空数组 = 确认无课；没有的周 = 无数据 */
   const WEEKS_SEED = {
     1: [],
@@ -336,6 +364,7 @@
       { name: "金融科技基础", credits: 3, attr: "必修", teacher: "李小杭", room: "教B301", day: 2, periods: [6, 7] },
       { name: "大学生职业生涯与规划", credits: 1, attr: "必修", teacher: "梁广洋", room: "教B403", day: 3, periods: [1, 2] },
       { name: "大学生心理健康教育", credits: 2, attr: "必修", teacher: "林炳橼", room: "教B403", day: 3, periods: [3, 4] },
+      { name: "体育Ⅰ", credits: 2, attr: "必修", teacher: "", room: "", day: 3, periods: [8, 9] },
       { name: "形势与政策Ⅰ", credits: 0.2, attr: "必修", teacher: "邱春明", room: "教B209", day: 3, periods: [10, 11, 12, 13] },
       { name: "大学英语Ⅰ", credits: 3, attr: "必修", teacher: "许燕兰", room: "教B110", day: 4, periods: [1, 2] },
       { name: "金融基础", credits: 3, attr: "必修", teacher: "薛宇辰", room: "教B509", day: 4, periods: [3, 4, 5] },
@@ -1211,8 +1240,48 @@
     $('#zsbBody').innerHTML = body;
   }
 
+  function renderNetwork() {
+    const D = NETWORK_DUTY;
+    const body = D.duty.map(function (r) {
+      const members = r.members.map(function (m) {
+        return esc(m.name) + (m.me ? ' <span class="tag">我</span>' : '');
+      }).join('、');
+      const leader = esc(r.leader) + (r.leaderNote ? ' <span class="tag">' + esc(r.leaderNote) + '</span>' : '');
+      return '<tr>' +
+        '<td data-label="星期"><strong>' + esc(r.day) + '</strong></td>' +
+        '<td data-label="值班人员">' + members + '</td>' +
+        '<td data-label="带班班长">' + leader + '</td>' +
+        '</tr>';
+    }).join('');
+    const notes = D.notes || { highlights: [], rules: [] };
+    const highlightsHTML = (notes.highlights || []).map(function (t) {
+      return '<li>⭐ ' + esc(t) + '</li>';
+    }).join('');
+    const rulesHTML = (notes.rules || []).map(function (t) {
+      return '<li>' + esc(t) + '</li>';
+    }).join('');
+    $('#networkBody').innerHTML =
+      '<div class="network-head">' +
+        '<h3>' + esc(D.label) + '</h3>' +
+        '<p>' + esc(D.period) + ' · 公益分 <strong>' + D.points + '</strong>' +
+          (D.location ? ' · 地点 ' + esc(D.location) : '') + '</p>' +
+      '</div>' +
+      '<div class="table-scroll"><table class="datatable responsive network-table">' +
+        '<thead><tr><th>星期</th><th>值班人员</th><th>带班班长</th></tr></thead>' +
+        '<tbody>' + body + '</tbody>' +
+      '</table></div>' +
+      '<div class="network-notes">' +
+        '<div class="network-notes-head">' +
+          '<span class="network-notes-icon" aria-hidden="true">📌</span>' +
+          '<h4>注意事项</h4>' +
+        '</div>' +
+        (highlightsHTML ? '<ul class="network-note-highlights">' + highlightsHTML + '</ul>' : '') +
+        (rulesHTML ? '<ol class="network-note-rules">' + rulesHTML + '</ol>' : '') +
+      '</div>';
+  }
+
   function switchTrack(track) {
-    state.track = (track === 'zsb' || track === 'theory' || track === 'plan') ? track : 'main';
+    state.track = (track === 'zsb' || track === 'theory' || track === 'plan' || track === 'network') ? track : 'main';
     const zsb = state.track === 'zsb';
     const theoryTrack = state.track === 'theory';
     $('#weekbar').classList.toggle('is-zsb', zsb);
@@ -1222,6 +1291,9 @@
     const planTrack = state.track === 'plan';
     $('#weekbar').classList.toggle('is-plan', planTrack);
     $('#view-schedule').classList.toggle('track-plan', planTrack);
+    const networkTrack = state.track === 'network';
+    $('#weekbar').classList.toggle('is-network', networkTrack);
+    $('#view-schedule').classList.toggle('track-network', networkTrack);
     $$('#trackSwitch button').forEach(function (b) {
       const on = b.dataset.track === state.track;
       b.classList.toggle('active', on);
@@ -1251,6 +1323,14 @@
       } catch (err2) {
         const box2 = $('#planNote');
         if (box2) box2.textContent = '执行计划渲染失败：' + (err2 && err2.message ? err2.message : err2);
+      }
+    }
+    if (networkTrack) {
+      try {
+        renderNetwork();
+      } catch (err3) {
+        const box3 = $('#networkNote');
+        if (box3) box3.textContent = '网络中心值班渲染失败：' + (err3 && err3.message ? err3.message : err3);
       }
     }
     if (isNarrow()) window.scrollTo({ top: 0, behavior: 'auto' });
